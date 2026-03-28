@@ -205,11 +205,10 @@ async function saveCustomer(customerData = {}) {
     const customersRef = getCustomersCollectionRef();
     await customersRef.doc(savedRecord.id).set(savedRecord);
 
-  const auditLogsRef = getAuditLogsCollectionRef();
+const auditLogsRef = getAuditLogsCollectionRef();
 await auditLogsRef.add({
-  action: 'requestDeleteCustomer',
-  customerId: cleanCustomerId,
-  customerName: existingData.name || '',
+  action: isUpdate ? 'updateCustomer' : 'createCustomer',
+  customerId: savedRecord.id,
   companyId: runtimeContext.companyId,
   userId: runtimeContext.userId || '',
   createdAt: now
@@ -286,10 +285,10 @@ async function requestCustomerDelete(customerId = '') {
       createdAt: now
     });
 
-  return {
+ return {
   ok: true,
   customerId: cleanCustomerId,
-  customerName: existingCustomer.name || '',
+  customerName: existingData.name || '',
   status: 'pending',
   requestedAt: now,
   requestedBy: runtimeContext.userId || ''
