@@ -816,6 +816,8 @@ if (openCustomerInputBtn) {
   openCustomerInputBtn.addEventListener('click', () => {
     if (!customerInputHost) return;
 
+    activeCustomerRecord = null;
+
     const customerFields = customerInputHost.querySelectorAll('input[type="text"], textarea');
     customerFields.forEach(field => {
       field.value = '';
