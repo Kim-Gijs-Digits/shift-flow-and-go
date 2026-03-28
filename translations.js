@@ -44,7 +44,11 @@ customerOverlayDetailPhotosPlaceholder: "Detailfoto’s",
 customerPhoneCallLabel: "Bellen",
 customerPhoneSmsLabel: "Sms",
 customerPhoneWhatsappCallLabel: "WhatsApp bellen",
-customerPhoneWhatsappMessageLabel: "WhatsApp bericht"
+customerPhoneWhatsappMessageLabel: "WhatsApp bericht",
+deleteCustomerBtn: "Verwijderen",
+deleteCustomerConfirmTitle: "Klant verwijderen?",
+deleteCustomerConfirmBody: "Deze klant wordt nog niet definitief verwijderd. Er wordt een verwijderverzoek klaargezet voor admin-controle.",
+deleteCustomerPendingLabel: "Verwijderverzoek verstuurd"
   },
 
   en: {
@@ -92,7 +96,11 @@ customerOverlayDetailPhotosPlaceholder: "Detail photos",
 customerPhoneCallLabel: "Call",
 customerPhoneSmsLabel: "Text",
 customerPhoneWhatsappCallLabel: "WhatsApp call",
-customerPhoneWhatsappMessageLabel: "WhatsApp message"
+customerPhoneWhatsappMessageLabel: "WhatsApp message",
+deleteCustomerBtn: "Delete",
+deleteCustomerConfirmTitle: "Delete customer?",
+deleteCustomerConfirmBody: "This customer will not be permanently deleted yet. A delete request will be prepared for admin review.",
+deleteCustomerPendingLabel: "Delete request sent"
   },
 
   fr: {
@@ -140,7 +148,11 @@ customerOverlayDetailPhotosPlaceholder: "Photos détaillées",
 customerPhoneCallLabel: "Appeler",
 customerPhoneSmsLabel: "SMS",
 customerPhoneWhatsappCallLabel: "Appel WhatsApp",
-customerPhoneWhatsappMessageLabel: "Message WhatsApp"
+customerPhoneWhatsappMessageLabel: "Message WhatsApp",
+deleteCustomerBtn: "Supprimer",
+deleteCustomerConfirmTitle: "Supprimer le client ?",
+deleteCustomerConfirmBody: "Ce client ne sera pas encore supprimé définitivement. Une demande de suppression sera préparée pour validation par l’administrateur.",
+deleteCustomerPendingLabel: "Demande de suppression envoyée"
   },
 
   de: {
@@ -188,7 +200,11 @@ customerOverlayDetailPhotosPlaceholder: "Detailfotos",
 customerPhoneCallLabel: "Anrufen",
 customerPhoneSmsLabel: "SMS",
 customerPhoneWhatsappCallLabel: "WhatsApp-Anruf",
-customerPhoneWhatsappMessageLabel: "WhatsApp-Nachricht"
+customerPhoneWhatsappMessageLabel: "WhatsApp-Nachricht",
+deleteCustomerBtn: "Löschen",
+deleteCustomerConfirmTitle: "Kunde löschen?",
+deleteCustomerConfirmBody: "Dieser Kunde wird noch nicht endgültig gelöscht. Es wird zuerst eine Löschanfrage zur Admin-Prüfung vorbereitet.",
+deleteCustomerPendingLabel: "Löschanfrage gesendet"
   },
 
   es: {
@@ -236,7 +252,11 @@ customerOverlayDetailPhotosPlaceholder: "Fotos de detalle",
 customerPhoneCallLabel: "Llamar",
 customerPhoneSmsLabel: "SMS",
 customerPhoneWhatsappCallLabel: "Llamada por WhatsApp",
-customerPhoneWhatsappMessageLabel: "Mensaje de WhatsApp"
+customerPhoneWhatsappMessageLabel: "Mensaje de WhatsApp",
+deleteCustomerBtn: "Eliminar",
+deleteCustomerConfirmTitle: "¿Eliminar cliente?",
+deleteCustomerConfirmBody: "Este cliente aún no se eliminará definitivamente. Se preparará una solicitud de eliminación para revisión del administrador.",
+deleteCustomerPendingLabel: "Solicitud de eliminación enviada"
   },
 
   it: {
@@ -284,7 +304,11 @@ customerOverlayDetailPhotosPlaceholder: "Foto di dettaglio",
 customerPhoneCallLabel: "Chiama",
 customerPhoneSmsLabel: "SMS",
 customerPhoneWhatsappCallLabel: "Chiamata WhatsApp",
-customerPhoneWhatsappMessageLabel: "Messaggio WhatsApp"
+customerPhoneWhatsappMessageLabel: "Messaggio WhatsApp",
+deleteCustomerBtn: "Elimina",
+deleteCustomerConfirmTitle: "Eliminare cliente?",
+deleteCustomerConfirmBody: "Questo cliente non verrà ancora eliminato definitivamente. Verrà preparata una richiesta di eliminazione per il controllo dell’amministratore.",
+deleteCustomerPendingLabel: "Richiesta di eliminazione inviata"
     
   },
 
@@ -333,7 +357,11 @@ customerOverlayDetailPhotosPlaceholder: "Zdjęcia szczegółowe",
 customerPhoneCallLabel: "Zadzwoń",
 customerPhoneSmsLabel: "SMS",
 customerPhoneWhatsappCallLabel: "Połączenie WhatsApp",
-customerPhoneWhatsappMessageLabel: "Wiadomość WhatsApp"
+customerPhoneWhatsappMessageLabel: "Wiadomość WhatsApp",
+deleteCustomerBtn: "Usuń",
+deleteCustomerConfirmTitle: "Usunąć klienta?",
+deleteCustomerConfirmBody: "Ten klient nie zostanie jeszcze trwale usunięty. Zostanie przygotowany wniosek o usunięcie do sprawdzenia przez administratora.",
+deleteCustomerPendingLabel: "Wysłano prośbę o usunięcie"
   },
 
   hu: {
@@ -381,6 +409,10 @@ customerOverlayDetailPhotosPlaceholder: "Részletfotók",
 customerPhoneCallLabel: "Hívás",
 customerPhoneSmsLabel: "SMS",
 customerPhoneWhatsappCallLabel: "WhatsApp hívás",
-customerPhoneWhatsappMessageLabel: "WhatsApp üzenet"
+customerPhoneWhatsappMessageLabel: "WhatsApp üzenet",
+deleteCustomerBtn: "Törlés",
+deleteCustomerConfirmTitle: "Ügyfél törlése?",
+deleteCustomerConfirmBody: "Ez az ügyfél még nem lesz végleg törölve. Egy törlési kérés készül adminisztrátori ellenőrzésre.",
+deleteCustomerPendingLabel: "Törlési kérés elküldve"
   }
 };

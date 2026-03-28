@@ -104,6 +104,20 @@
     line-height: 1.45;
     margin-top: 6px;
   }
+  .customer-overlay-danger-wrap{
+  margin-top: 18px;
+}
+
+.customer-overlay-danger-btn{
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid rgba(255, 90, 90, 0.28);
+  border-radius: 16px;
+  background: rgba(255, 90, 90, 0.08);
+  color: #ffe8e8;
+  font-size: 15px;
+  font-weight: 700;
+}
 </style>
 
 <div class="customer-overlay-backdrop">
@@ -157,6 +171,16 @@
 <div class="customer-overlay-block">
   <div class="customer-overlay-block-title" data-i18n="customerOverlayPhotosTitle">Foto’s</div>
   <div class="customer-overlay-line" data-i18n="customerOverlayDetailPhotosPlaceholder">Detailfoto’s</div>
+</div>
+<div class="customer-overlay-danger-wrap">
+  <button
+    id="deleteCustomerOverlayBtn"
+    class="customer-overlay-danger-btn"
+    type="button"
+    data-i18n="deleteCustomerBtn"
+  >
+    Verwijderen
+  </button>
 </div>
   </div>
 </div>
