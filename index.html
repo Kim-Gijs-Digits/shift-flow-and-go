@@ -294,6 +294,77 @@
 #customerOverlayHost[hidden]{
   display: none;
 }
+#confirmModalHost{
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+}
+
+#confirmModalHost[hidden]{
+  display: none;
+}
+
+.confirm-modal-backdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 10, 12, 0.64);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 14px;
+}
+
+.confirm-modal-card{
+  width: 100%;
+  max-width: 420px;
+  border: 1px solid rgba(79, 214, 194, 0.22);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(20, 60, 64, 0.98), rgba(11, 34, 37, 0.98));
+  color: #f4fbfb;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.34), 0 0 24px rgba(79, 214, 194, 0.12);
+  padding: 18px;
+}
+
+.confirm-modal-title{
+  font-size: 20px;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+
+.confirm-modal-body{
+  font-size: 15px;
+  line-height: 1.5;
+  color: #d7f2ed;
+}
+
+.confirm-modal-actions{
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.confirm-modal-btn{
+  min-width: 110px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(79, 214, 194, 0.22);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.confirm-modal-btn-secondary{
+  background: rgba(79, 214, 194, 0.08);
+  color: #eafffb;
+}
+
+.confirm-modal-btn-danger{
+  background: rgba(255, 90, 90, 0.10);
+  border-color: rgba(255, 90, 90, 0.28);
+  color: #ffe8e8;
+}
   </style>
 </head>
 <body>
@@ -323,6 +394,34 @@
 <div id="settingsPanelHost" hidden></div>
 <div id="customerInputHost" hidden></div>
 <div id="customerOverlayHost" hidden></div>
+
+<div id="confirmModalHost" hidden>
+  <div class="confirm-modal-backdrop">
+    <div class="confirm-modal-card">
+      <h3 id="confirmModalTitle" class="confirm-modal-title">Bevestigen</h3>
+      <p id="confirmModalBody" class="confirm-modal-body"></p>
+
+      <div class="confirm-modal-actions">
+        <button
+          id="confirmModalCancelBtn"
+          type="button"
+          class="confirm-modal-btn confirm-modal-btn-secondary"
+        >
+          Annuleren
+        </button>
+
+        <button
+          id="confirmModalAcceptBtn"
+          type="button"
+          class="confirm-modal-btn confirm-modal-btn-danger"
+        >
+          Bevestigen
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <button id="openSettingsBtn" class="settings-fab" aria-label="Instellingen">⚙</button>
   </main>
  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -349,8 +448,13 @@ const customerInputHost = document.getElementById('customerInputHost');
 const customerOverlayHost = document.getElementById('customerOverlayHost');
 const customerSearchInput = document.getElementById('customerSearchInput');
 const liveSearchLayer = document.getElementById('liveSearchLayer');
-
+const confirmModalHost = document.getElementById('confirmModalHost');
+const confirmModalTitle = document.getElementById('confirmModalTitle');
+const confirmModalBody = document.getElementById('confirmModalBody');
+const confirmModalCancelBtn = document.getElementById('confirmModalCancelBtn');
+const confirmModalAcceptBtn = document.getElementById('confirmModalAcceptBtn');
 let activeCustomerRecord = null;
+let pendingConfirmAction = null;
 
 function getShiftFlowFirestore() {
   const firebaseConfig = SHIFT_FLOW_APP_CONFIG.firebase || {};
@@ -861,12 +965,25 @@ if (customerInputHost) {
         {};
 
       const confirmTitle = dict.deleteCustomerConfirmTitle || 'Klant verwijderen?';
-      const confirmBody =
-        dict.deleteCustomerConfirmBody ||
-        'Deze klant wordt nog niet definitief verwijderd. Er wordt een verwijderverzoek klaargezet voor admin-controle.';
+      const confirmBody = dict.deleteCustomerConfirmBody || '';
+      const cancelLabel = dict.deleteCustomerConfirmCancel || 'Annuleren';
+      const acceptLabel = dict.deleteCustomerConfirmAccept || 'Bevestigen';
 
-      const confirmed = window.confirm(`${confirmTitle}\n\n${confirmBody}`);
-      if (!confirmed) return;
+      if (confirmModalCancelBtn) {
+        confirmModalCancelBtn.textContent = cancelLabel;
+      }
+
+      if (confirmModalAcceptBtn) {
+        confirmModalAcceptBtn.textContent = acceptLabel;
+      }
+
+      openConfirmModal({
+        title: confirmTitle,
+        body: confirmBody,
+        onAccept: async () => {
+          console.log('SHIFT-FLOW delete confirm accepted for customer:', activeCustomerRecord?.id || '');
+        }
+      });
     }
   });
 }
@@ -961,6 +1078,66 @@ function escapeHtml(value = '') {
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#39;');
 }
+function closeConfirmModal() {
+  pendingConfirmAction = null;
+
+  if (confirmModalHost) {
+    confirmModalHost.hidden = true;
+  }
+
+  if (confirmModalTitle) {
+    confirmModalTitle.textContent = '';
+  }
+
+  if (confirmModalBody) {
+    confirmModalBody.textContent = '';
+  }
+}
+
+function openConfirmModal({ title = '', body = '', onAccept = null } = {}) {
+  pendingConfirmAction = typeof onAccept === 'function' ? onAccept : null;
+
+  if (confirmModalTitle) {
+    confirmModalTitle.textContent = title || '';
+  }
+
+  if (confirmModalBody) {
+    confirmModalBody.textContent = body || '';
+  }
+
+  if (confirmModalHost) {
+    confirmModalHost.hidden = false;
+  }
+}
+
+if (confirmModalCancelBtn) {
+  confirmModalCancelBtn.addEventListener('click', () => {
+    closeConfirmModal();
+  });
+}
+
+if (confirmModalAcceptBtn) {
+  confirmModalAcceptBtn.addEventListener('click', async () => {
+    const action = pendingConfirmAction;
+    closeConfirmModal();
+
+    if (typeof action === 'function') {
+      await action();
+    }
+  });
+}
+
+if (confirmModalHost) {
+  confirmModalHost.addEventListener('click', (event) => {
+    if (event.target === confirmModalHost || event.target.closest('.confirm-modal-backdrop')) {
+      const clickedCard = event.target.closest('.confirm-modal-card');
+      if (!clickedCard) {
+        closeConfirmModal();
+      }
+    }
+  });
+}
+
 function renderLiveSearchResults(customers = []) {
   if (!liveSearchLayer) return;
 
