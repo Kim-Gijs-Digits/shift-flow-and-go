@@ -964,6 +964,8 @@ resultButtons.forEach(button => {
       const customer = await window.ShiftFlowCustomers.getCustomerById(customerId);
       if (!customer) return;
 
+      activeCustomerRecord = customer;
+
 const overlayPhotoEl = customerOverlayHost.querySelector('.customer-overlay-photo');
 const nameEl = customerOverlayHost.querySelector('[data-customer-field="name"]');
 const addressEl = customerOverlayHost.querySelector('[data-customer-field="address"]');
