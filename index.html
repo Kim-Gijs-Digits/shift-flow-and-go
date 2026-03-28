@@ -350,6 +350,8 @@ const customerOverlayHost = document.getElementById('customerOverlayHost');
 const customerSearchInput = document.getElementById('customerSearchInput');
 const liveSearchLayer = document.getElementById('liveSearchLayer');
 
+let activeCustomerRecord = null;
+
 function getShiftFlowFirestore() {
   const firebaseConfig = SHIFT_FLOW_APP_CONFIG.firebase || {};
   const hasCompleteConfig =
@@ -839,10 +841,50 @@ if (customerOverlayHost) {
     }
 
     if (editBtn) {
-      customerOverlayHost.hidden = true;
-      if (customerInputHost) {
-        customerInputHost.hidden = false;
+      if (!customerInputHost) return;
+
+      const customer = activeCustomerRecord || {};
+
+      const nameInput = customerInputHost.querySelector('#customerNameInput');
+      const addressInput = customerInputHost.querySelector('#customerAddressInput');
+      const gateCodeInput = customerInputHost.querySelector('#customerGateCodeInput');
+      const contactInput = customerInputHost.querySelector('#customerContactInput');
+      const phoneInput = customerInputHost.querySelector('#customerPhoneInput');
+      const websiteInput = customerInputHost.querySelector('#customerWebsiteInput');
+      const driverInstructionsInput = customerInputHost.querySelector('#customerDriverInstructionsInput');
+      const dropoffInput = customerInputHost.querySelector('#customerDropoffInput');
+      const openingHoursInput = customerInputHost.querySelector('#customerOpeningHoursInput');
+      const notesInput = customerInputHost.querySelector('#customerNotesInput');
+      const mainPhotoInput = customerInputHost.querySelector('#customerMainPhotoInput');
+      const mainPhotoPreviewImg = customerInputHost.querySelector('#customerMainPhotoPreviewImg');
+      const mainPhotoPlaceholderText = customerInputHost.querySelector('#customerMainPhotoPlaceholderText');
+
+      if (nameInput) nameInput.value = customer.name || '';
+      if (addressInput) addressInput.value = customer.address || '';
+      if (gateCodeInput) gateCodeInput.value = customer.gateCode || '';
+      if (contactInput) contactInput.value = customer.contact || '';
+      if (phoneInput) phoneInput.value = customer.phone || '';
+      if (websiteInput) websiteInput.value = customer.website || '';
+      if (driverInstructionsInput) driverInstructionsInput.value = customer.driverInstructions || '';
+      if (dropoffInput) dropoffInput.value = customer.dropoffInfo || '';
+      if (openingHoursInput) openingHoursInput.value = customer.openingHours || '';
+      if (notesInput) notesInput.value = customer.notes || '';
+
+      if (mainPhotoInput) {
+        mainPhotoInput.value = '';
       }
+
+      if (mainPhotoPreviewImg) {
+        mainPhotoPreviewImg.src = customer.mainPhotoUrl || '';
+        mainPhotoPreviewImg.style.display = customer.mainPhotoUrl ? 'block' : 'none';
+      }
+
+      if (mainPhotoPlaceholderText) {
+        mainPhotoPlaceholderText.style.display = customer.mainPhotoUrl ? 'none' : '';
+      }
+
+      customerOverlayHost.hidden = true;
+      customerInputHost.hidden = false;
     }
   });
 }
@@ -1082,6 +1124,7 @@ if (photosBlock) {
       : 'none';
 }
 
+      activeCustomerRecord = customer;
       liveSearchLayer.hidden = true;
 
       if (customerOverlayHost) {
