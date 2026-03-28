@@ -372,6 +372,13 @@ function getShiftFlowFirestore() {
 const SHIFT_FLOW_DB = getShiftFlowFirestore();
 console.log('SHIFT FLOW & GO DB ready:', !!SHIFT_FLOW_DB);
 
+const SHIFT_FLOW_RUNTIME = {
+  companyId: 'vanoirschot-demo',
+  userId: 'kim-local-test',
+  defaultCountryCode: '',
+  storageMode: SHIFT_FLOW_APP_CONFIG.storageMode || 'runtime'
+};
+
   const SHIFT_FLOW_COUNTRY_CODES = [
   { code: '+93', label: 'Afghanistan (+93)' },
   { code: '+355', label: 'Albania (+355)' },
