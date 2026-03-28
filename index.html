@@ -977,13 +977,35 @@ if (customerInputHost) {
         confirmModalAcceptBtn.textContent = acceptLabel;
       }
 
-      openConfirmModal({
-        title: confirmTitle,
-        body: confirmBody,
-        onAccept: async () => {
-          console.log('SHIFT-FLOW delete confirm accepted for customer:', activeCustomerRecord?.id || '');
-        }
-      });
+    openConfirmModal({
+  title: confirmTitle,
+  body: confirmBody,
+  onAccept: async () => {
+    const customerId = activeCustomerRecord?.id || '';
+
+    if (!customerId) {
+      console.warn('SHIFT-FLOW delete request skipped: missing active customer id.');
+      return;
+    }
+
+    try {
+      const result = await window.ShiftFlowCustomers.requestCustomerDelete(customerId);
+      console.log('SHIFT-FLOW delete request stored:', result);
+
+      customerInputHost.hidden = true;
+      customerOverlayHost.hidden = true;
+      activeCustomerRecord = null;
+
+      const pendingLabel =
+        dict.deleteCustomerPendingLabel ||
+        'Verwijderverzoek verstuurd';
+
+      alert(pendingLabel);
+    } catch (error) {
+      console.error('SHIFT-FLOW delete request failed:', error);
+    }
+  }
+});
     }
   });
 }

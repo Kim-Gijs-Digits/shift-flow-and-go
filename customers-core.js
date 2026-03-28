@@ -165,7 +165,7 @@ async function getCustomerById(customerId = '') {
   );
 }
 
- async function saveCustomer(customerData = {}) {
+async function saveCustomer(customerData = {}) {
   requireCompanyId();
 
   const base = createEmptyCustomer();
@@ -217,12 +217,85 @@ async function getCustomerById(customerId = '') {
   return savedRecord;
 }
 
+async function requestCustomerDelete(customerId = '') {
+  requireCompanyId();
+
+  const cleanCustomerId = String(customerId || '').trim();
+
+  if (!cleanCustomerId) {
+    throw new Error('Missing customerId for delete request.');
+  }
+
+  const now = new Date().toISOString();
+
+  if (runtimeContext.storageMode === 'cloud') {
+    const customersRef = getCustomersCollectionRef();
+    const customerDocRef = customersRef.doc(cleanCustomerId);
+
+    await customerDocRef.set(
+      {
+        deleteRequest: {
+          status: 'pending',
+          requestedAt: now,
+          requestedBy: runtimeContext.userId || ''
+        },
+        updatedAt: now,
+        updatedBy: runtimeContext.userId || ''
+      },
+      { merge: true }
+    );
+
+    const auditLogsRef = getAuditLogsCollectionRef();
+    await auditLogsRef.add({
+      action: 'requestDeleteCustomer',
+      customerId: cleanCustomerId,
+      companyId: runtimeContext.companyId,
+      userId: runtimeContext.userId || '',
+      createdAt: now
+    });
+
+    return {
+      ok: true,
+      customerId: cleanCustomerId,
+      status: 'pending',
+      requestedAt: now,
+      requestedBy: runtimeContext.userId || ''
+    };
+  }
+
+  const existingCustomer = runtimeCustomers.find(customer =>
+    customer.companyId === runtimeContext.companyId &&
+    customer.id === cleanCustomerId
+  );
+
+  if (!existingCustomer) {
+    throw new Error('Customer not found for delete request.');
+  }
+
+  existingCustomer.deleteRequest = {
+    status: 'pending',
+    requestedAt: now,
+    requestedBy: runtimeContext.userId || ''
+  };
+  existingCustomer.updatedAt = now;
+  existingCustomer.updatedBy = runtimeContext.userId || '';
+
+  return {
+    ok: true,
+    customerId: cleanCustomerId,
+    status: 'pending',
+    requestedAt: now,
+    requestedBy: runtimeContext.userId || ''
+  };
+}
+
 return {
   createEmptyCustomer,
   setRuntimeContext,
   getRuntimeContext,
   searchCustomers,
   getCustomerById,
-  saveCustomer
+  saveCustomer,
+  requestCustomerDelete
 };
 })();
