@@ -73,6 +73,34 @@ async function searchCustomers(query = '') {
 
   if (!cleanQuery) return [];
 
+  if (runtimeContext.storageMode === 'cloud') {
+    const customersRef = getCustomersCollectionRef();
+    const snapshot = await customersRef.get();
+
+    return snapshot.docs
+      .map(doc => ({ id: doc.id, ...doc.data() }))
+      .filter(customer => {
+        if (customer.isActive === false) return false;
+
+        const haystack = [
+          customer.name,
+          customer.address,
+          customer.gateCode,
+          customer.contact,
+          customer.phone,
+          customer.website,
+          customer.driverInstructions,
+          customer.dropoffInfo,
+          customer.openingHours,
+          customer.notes
+        ]
+          .join(' ')
+          .toLowerCase();
+
+        return haystack.includes(cleanQuery);
+      });
+  }
+
   return runtimeCustomers.filter(customer => {
     if (customer.companyId !== runtimeContext.companyId) return false;
 
@@ -101,6 +129,26 @@ async function getCustomerById(customerId = '') {
   const cleanId = String(customerId || '').trim();
 
   if (!cleanId) return null;
+
+  if (runtimeContext.storageMode === 'cloud') {
+    const customersRef = getCustomersCollectionRef();
+    const docSnapshot = await customersRef.doc(cleanId).get();
+
+    if (!docSnapshot.exists) {
+      return null;
+    }
+
+    const customer = {
+      id: docSnapshot.id,
+      ...docSnapshot.data()
+    };
+
+    if (customer.isActive === false) {
+      return null;
+    }
+
+    return customer;
+  }
 
   return (
     runtimeCustomers.find(customer =>
