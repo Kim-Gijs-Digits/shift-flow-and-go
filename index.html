@@ -847,11 +847,30 @@ if (openCustomerInputBtn) {
 if (customerInputHost) {
   customerInputHost.addEventListener('click', (event) => {
     const closeBtn = event.target.closest('#closeCustomerInputBtn');
+    const deleteBtn = event.target.closest('#deleteCustomerInputBtn');
+
     if (closeBtn) {
       customerInputHost.hidden = true;
     }
+
+    if (deleteBtn) {
+      const activeLang = document.documentElement.dataset.lang || 'nl';
+      const dict =
+        window.SHIFTFLOW_TRANSLATIONS?.[activeLang] ||
+        window.SHIFTFLOW_TRANSLATIONS?.nl ||
+        {};
+
+      const confirmTitle = dict.deleteCustomerConfirmTitle || 'Klant verwijderen?';
+      const confirmBody =
+        dict.deleteCustomerConfirmBody ||
+        'Deze klant wordt nog niet definitief verwijderd. Er wordt een verwijderverzoek klaargezet voor admin-controle.';
+
+      const confirmed = window.confirm(`${confirmTitle}\n\n${confirmBody}`);
+      if (!confirmed) return;
+    }
   });
 }
+
 if (customerOverlayHost) {
   customerOverlayHost.addEventListener('click', (event) => {
     const closeBtn = event.target.closest('#closeCustomerOverlayBtn');

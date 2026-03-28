@@ -48,7 +48,9 @@ customerPhoneWhatsappMessageLabel: "WhatsApp bericht",
 deleteCustomerBtn: "Verwijderen",
 deleteCustomerConfirmTitle: "Klant verwijderen?",
 deleteCustomerConfirmBody: "Deze klant wordt nog niet definitief verwijderd. Er wordt een verwijderverzoek klaargezet voor admin-controle.",
-deleteCustomerPendingLabel: "Verwijderverzoek verstuurd"
+deleteCustomerPendingLabel: "Verwijderverzoek verstuurd",
+deleteCustomerConfirmAccept: "Bevestigen",
+deleteCustomerConfirmCancel: "Annuleren"
   },
 
   en: {
@@ -100,7 +102,9 @@ customerPhoneWhatsappMessageLabel: "WhatsApp message",
 deleteCustomerBtn: "Delete",
 deleteCustomerConfirmTitle: "Delete customer?",
 deleteCustomerConfirmBody: "This customer will not be permanently deleted yet. A delete request will be prepared for admin review.",
-deleteCustomerPendingLabel: "Delete request sent"
+deleteCustomerPendingLabel: "Delete request sent",
+deleteCustomerConfirmAccept: "Confirm",
+deleteCustomerConfirmCancel: "Cancel"
   },
 
   fr: {
@@ -152,7 +156,9 @@ customerPhoneWhatsappMessageLabel: "Message WhatsApp",
 deleteCustomerBtn: "Supprimer",
 deleteCustomerConfirmTitle: "Supprimer le client ?",
 deleteCustomerConfirmBody: "Ce client ne sera pas encore supprimé définitivement. Une demande de suppression sera préparée pour validation par l’administrateur.",
-deleteCustomerPendingLabel: "Demande de suppression envoyée"
+deleteCustomerPendingLabel: "Demande de suppression envoyée",
+deleteCustomerConfirmAccept: "Confirmer",
+deleteCustomerConfirmCancel: "Annuler"
   },
 
   de: {
@@ -204,7 +210,9 @@ customerPhoneWhatsappMessageLabel: "WhatsApp-Nachricht",
 deleteCustomerBtn: "Löschen",
 deleteCustomerConfirmTitle: "Kunde löschen?",
 deleteCustomerConfirmBody: "Dieser Kunde wird noch nicht endgültig gelöscht. Es wird zuerst eine Löschanfrage zur Admin-Prüfung vorbereitet.",
-deleteCustomerPendingLabel: "Löschanfrage gesendet"
+deleteCustomerPendingLabel: "Löschanfrage gesendet",
+deleteCustomerConfirmAccept: "Bestätigen",
+deleteCustomerConfirmCancel: "Abbrechen"
   },
 
   es: {
@@ -256,7 +264,9 @@ customerPhoneWhatsappMessageLabel: "Mensaje de WhatsApp",
 deleteCustomerBtn: "Eliminar",
 deleteCustomerConfirmTitle: "¿Eliminar cliente?",
 deleteCustomerConfirmBody: "Este cliente aún no se eliminará definitivamente. Se preparará una solicitud de eliminación para revisión del administrador.",
-deleteCustomerPendingLabel: "Solicitud de eliminación enviada"
+deleteCustomerPendingLabel: "Solicitud de eliminación enviada",
+deleteCustomerConfirmAccept: "Confirmar",
+deleteCustomerConfirmCancel: "Cancelar"
   },
 
   it: {
@@ -308,7 +318,9 @@ customerPhoneWhatsappMessageLabel: "Messaggio WhatsApp",
 deleteCustomerBtn: "Elimina",
 deleteCustomerConfirmTitle: "Eliminare cliente?",
 deleteCustomerConfirmBody: "Questo cliente non verrà ancora eliminato definitivamente. Verrà preparata una richiesta di eliminazione per il controllo dell’amministratore.",
-deleteCustomerPendingLabel: "Richiesta di eliminazione inviata"
+deleteCustomerPendingLabel: "Richiesta di eliminazione inviata",
+deleteCustomerConfirmAccept: "Conferma",
+deleteCustomerConfirmCancel: "Annulla"
     
   },
 
@@ -361,7 +373,9 @@ customerPhoneWhatsappMessageLabel: "Wiadomość WhatsApp",
 deleteCustomerBtn: "Usuń",
 deleteCustomerConfirmTitle: "Usunąć klienta?",
 deleteCustomerConfirmBody: "Ten klient nie zostanie jeszcze trwale usunięty. Zostanie przygotowany wniosek o usunięcie do sprawdzenia przez administratora.",
-deleteCustomerPendingLabel: "Wysłano prośbę o usunięcie"
+deleteCustomerPendingLabel: "Wysłano prośbę o usunięcie",
+deleteCustomerConfirmAccept: "Potwierdź",
+deleteCustomerConfirmCancel: "Anuluj"
   },
 
   hu: {
@@ -413,6 +427,8 @@ customerPhoneWhatsappMessageLabel: "WhatsApp üzenet",
 deleteCustomerBtn: "Törlés",
 deleteCustomerConfirmTitle: "Ügyfél törlése?",
 deleteCustomerConfirmBody: "Ez az ügyfél még nem lesz végleg törölve. Egy törlési kérés készül adminisztrátori ellenőrzésre.",
-deleteCustomerPendingLabel: "Törlési kérés elküldve"
+deleteCustomerPendingLabel: "Törlési kérés elküldve",
+deleteCustomerConfirmAccept: "Megerősítés",
+deleteCustomerConfirmCancel: "Mégse"
   }
 };
