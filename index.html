@@ -729,25 +729,42 @@ if (saveBtn) {
     if (saveBtn.dataset.isSaving === 'true') return;
     saveBtn.dataset.isSaving = 'true';
 
-    const customerData = {
+    const activeLang = document.documentElement.dataset.lang || 'nl';
+    const busyLabel =
+      window.SHIFTFLOW_TRANSLATIONS?.[activeLang]?.saveBusyBtn ||
+      window.SHIFTFLOW_TRANSLATIONS?.nl?.saveBusyBtn ||
+      'Opslaan bezig...';
+    const idleLabel =
+      window.SHIFTFLOW_TRANSLATIONS?.[activeLang]?.saveBtn ||
+      window.SHIFTFLOW_TRANSLATIONS?.nl?.saveBtn ||
+      'Opslaan';
+
+    saveBtn.textContent = busyLabel;
+    saveBtn.disabled = true;
+
+const customerData = {
+  id: activeCustomerRecord?.id || '',
+  createdAt: activeCustomerRecord?.createdAt || '',
+  createdBy: activeCustomerRecord?.createdBy || '',
+  isActive: activeCustomerRecord?.isActive !== false,
   name: customerInputHost.querySelector('#customerNameInput')?.value?.trim() || '',
- address: normalizeAddressValue(
-  customerInputHost.querySelector('#customerAddressInput')?.value || ''
-),
+  address: normalizeAddressValue(
+    customerInputHost.querySelector('#customerAddressInput')?.value || ''
+  ),
   gateCode: customerInputHost.querySelector('#customerGateCodeInput')?.value?.trim() || '',
   contact: customerInputHost.querySelector('#customerContactInput')?.value?.trim() || '',
- phone: normalizePhoneNumber(
-  customerInputHost.querySelector('#customerPhoneInput')?.value || '',
-  SHIFT_FLOW_RUNTIME.defaultCountryCode
-),
+  phone: normalizePhoneNumber(
+    customerInputHost.querySelector('#customerPhoneInput')?.value || '',
+    SHIFT_FLOW_RUNTIME.defaultCountryCode
+  ),
   website: normalizeWebsiteUrl(
-  customerInputHost.querySelector('#customerWebsiteInput')?.value || ''
-),
+    customerInputHost.querySelector('#customerWebsiteInput')?.value || ''
+  ),
   driverInstructions: customerInputHost.querySelector('#customerDriverInstructionsInput')?.value?.trim() || '',
   dropoffInfo: customerInputHost.querySelector('#customerDropoffInput')?.value?.trim() || '',
   openingHours: customerInputHost.querySelector('#customerOpeningHoursInput')?.value?.trim() || '',
   notes: customerInputHost.querySelector('#customerNotesInput')?.value?.trim() || '',
- mainPhotoUrl: customerInputHost.querySelector('#customerMainPhotoPreviewImg')?.getAttribute('src') || ''
+  mainPhotoUrl: customerInputHost.querySelector('#customerMainPhotoPreviewImg')?.getAttribute('src') || ''
 };
 
     try {
@@ -758,6 +775,8 @@ if (saveBtn) {
       console.error('SHIFT-FLOW save failed:', error);
     } finally {
       saveBtn.dataset.isSaving = 'false';
+      saveBtn.textContent = idleLabel;
+      saveBtn.disabled = false;
     }
       });
     }
