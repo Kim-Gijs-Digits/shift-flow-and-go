@@ -720,11 +720,14 @@ if (languageSelect) {
   });
 }
 
-    const saveBtn = customerInputHost.querySelector('#saveCustomerInputBtn');
+  const saveBtn = customerInputHost.querySelector('#saveCustomerInputBtn');
 
-    if (saveBtn) {
-      saveBtn.addEventListener('click', async () => {
-       const customerData = {
+if (saveBtn) {
+  saveBtn.addEventListener('click', async () => {
+    if (saveBtn.dataset.isSaving === 'true') return;
+    saveBtn.dataset.isSaving = 'true';
+
+    const customerData = {
   name: customerInputHost.querySelector('#customerNameInput')?.value?.trim() || '',
  address: normalizeAddressValue(
   customerInputHost.querySelector('#customerAddressInput')?.value || ''
@@ -745,13 +748,15 @@ if (languageSelect) {
  mainPhotoUrl: customerInputHost.querySelector('#customerMainPhotoPreviewImg')?.getAttribute('src') || ''
 };
 
-        try {
-          const savedCustomer = await window.ShiftFlowCustomers.saveCustomer(customerData);
-          console.log('SHIFT-FLOW saved customer draft:', savedCustomer);
-          customerInputHost.hidden = true;
-        } catch (error) {
-          console.error('SHIFT-FLOW save failed:', error);
-        }
+    try {
+      const savedCustomer = await window.ShiftFlowCustomers.saveCustomer(customerData);
+      console.log('SHIFT-FLOW saved customer draft:', savedCustomer);
+      customerInputHost.hidden = true;
+    } catch (error) {
+      console.error('SHIFT-FLOW save failed:', error);
+    } finally {
+      saveBtn.dataset.isSaving = 'false';
+    }
       });
     }
   } catch (error) {
