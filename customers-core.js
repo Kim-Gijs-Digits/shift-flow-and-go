@@ -86,8 +86,9 @@ async function searchCustomers(query = '') {
 
     return snapshot.docs
       .map(doc => ({ id: doc.id, ...doc.data() }))
-      .filter(customer => {
-        if (customer.isActive === false) return false;
+     .filter(customer => {
+  if (customer.isActive === false) return false;
+  if (customer.deleteRequest?.status === 'pending') return false;
 
         const haystack = [
           customer.name,
@@ -108,8 +109,9 @@ async function searchCustomers(query = '') {
       });
   }
 
-  return runtimeCustomers.filter(customer => {
-    if (customer.companyId !== runtimeContext.companyId) return false;
+return runtimeCustomers.filter(customer => {
+  if (customer.companyId !== runtimeContext.companyId) return false;
+  if (customer.deleteRequest?.status === 'pending') return false;
 
     const haystack = [
       customer.name,
@@ -150,19 +152,31 @@ async function getCustomerById(customerId = '') {
       ...docSnapshot.data()
     };
 
-    if (customer.isActive === false) {
-      return null;
-    }
+ if (customer.isActive === false) {
+  return null;
+}
 
-    return customer;
+if (customer.deleteRequest?.status === 'pending') {
+  return null;
+}
+
+return customer;
   }
 
-  return (
-    runtimeCustomers.find(customer =>
-      customer.companyId === runtimeContext.companyId &&
-      customer.id === cleanId
-    ) || null
-  );
+  const foundCustomer = runtimeCustomers.find(customer =>
+  customer.companyId === runtimeContext.companyId &&
+  customer.id === cleanId
+);
+
+if (!foundCustomer) {
+  return null;
+}
+
+if (foundCustomer.deleteRequest?.status === 'pending') {
+  return null;
+}
+
+return foundCustomer;
 }
 
 async function saveCustomer(customerData = {}) {
@@ -191,14 +205,15 @@ async function saveCustomer(customerData = {}) {
     const customersRef = getCustomersCollectionRef();
     await customersRef.doc(savedRecord.id).set(savedRecord);
 
-    const auditLogsRef = getAuditLogsCollectionRef();
-    await auditLogsRef.add({
-      action: isUpdate ? 'updateCustomer' : 'createCustomer',
-      customerId: savedRecord.id,
-      companyId: runtimeContext.companyId,
-      userId: runtimeContext.userId || '',
-      createdAt: now
-    });
+  const auditLogsRef = getAuditLogsCollectionRef();
+await auditLogsRef.add({
+  action: 'requestDeleteCustomer',
+  customerId: cleanCustomerId,
+  customerName: existingData.name || '',
+  companyId: runtimeContext.companyId,
+  userId: runtimeContext.userId || '',
+  createdAt: now
+});
 
     return savedRecord;
   }
@@ -216,7 +231,6 @@ async function saveCustomer(customerData = {}) {
 
   return savedRecord;
 }
-
 async function requestCustomerDelete(customerId = '') {
   requireCompanyId();
 
@@ -231,6 +245,24 @@ async function requestCustomerDelete(customerId = '') {
   if (runtimeContext.storageMode === 'cloud') {
     const customersRef = getCustomersCollectionRef();
     const customerDocRef = customersRef.doc(cleanCustomerId);
+    const customerSnapshot = await customerDocRef.get();
+
+    if (!customerSnapshot.exists) {
+      throw new Error('Customer not found for delete request.');
+    }
+
+    const existingData = customerSnapshot.data() || {};
+    const existingDeleteRequest = existingData.deleteRequest || {};
+
+    if (existingDeleteRequest.status === 'pending') {
+      return {
+        ok: true,
+        customerId: cleanCustomerId,
+        status: 'pending',
+        requestedAt: existingDeleteRequest.requestedAt || now,
+        requestedBy: existingDeleteRequest.requestedBy || ''
+      };
+    }
 
     await customerDocRef.set(
       {
@@ -254,13 +286,14 @@ async function requestCustomerDelete(customerId = '') {
       createdAt: now
     });
 
-    return {
-      ok: true,
-      customerId: cleanCustomerId,
-      status: 'pending',
-      requestedAt: now,
-      requestedBy: runtimeContext.userId || ''
-    };
+  return {
+  ok: true,
+  customerId: cleanCustomerId,
+  customerName: existingCustomer.name || '',
+  status: 'pending',
+  requestedAt: now,
+  requestedBy: runtimeContext.userId || ''
+};
   }
 
   const existingCustomer = runtimeCustomers.find(customer =>
@@ -270,6 +303,18 @@ async function requestCustomerDelete(customerId = '') {
 
   if (!existingCustomer) {
     throw new Error('Customer not found for delete request.');
+  }
+
+  const existingDeleteRequest = existingCustomer.deleteRequest || {};
+
+  if (existingDeleteRequest.status === 'pending') {
+    return {
+      ok: true,
+      customerId: cleanCustomerId,
+      status: 'pending',
+      requestedAt: existingDeleteRequest.requestedAt || now,
+      requestedBy: existingDeleteRequest.requestedBy || ''
+    };
   }
 
   existingCustomer.deleteRequest = {
