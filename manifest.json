@@ -1,0 +1,21 @@
+{
+  "name": "Shift Flow & Go",
+  "short_name": "Shift Flow",
+  "start_url": "/shift-flow-and-go/",
+  "scope": "/shift-flow-and-go/",
+  "display": "standalone",
+  "background_color": "#071416",
+  "theme_color": "#071416",
+  "icons": [
+    {
+      "src": "logo-badge.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "logo-badge.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
