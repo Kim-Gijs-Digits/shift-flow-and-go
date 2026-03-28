@@ -53,7 +53,7 @@ let runtimeCustomers = [];
       throw new Error('Missing companyId in ShiftFlowCustomers runtime context.');
     }
   }
-  function getCustomersCollectionRef() {
+function getCompanyDocRef() {
   requireCompanyId();
 
   if (!runtimeContext.db) {
@@ -62,8 +62,15 @@ let runtimeCustomers = [];
 
   return runtimeContext.db
     .collection('companies')
-    .doc(runtimeContext.companyId)
-    .collection('customers');
+    .doc(runtimeContext.companyId);
+}
+
+function getCustomersCollectionRef() {
+  return getCompanyDocRef().collection('customers');
+}
+
+function getAuditLogsCollectionRef() {
+  return getCompanyDocRef().collection('auditLogs');
 }
 
 async function searchCustomers(query = '') {
@@ -183,6 +190,16 @@ async function getCustomerById(customerId = '') {
   if (runtimeContext.storageMode === 'cloud') {
     const customersRef = getCustomersCollectionRef();
     await customersRef.doc(savedRecord.id).set(savedRecord);
+
+    const auditLogsRef = getAuditLogsCollectionRef();
+    await auditLogsRef.add({
+      action: isUpdate ? 'updateCustomer' : 'createCustomer',
+      customerId: savedRecord.id,
+      companyId: runtimeContext.companyId,
+      userId: runtimeContext.userId || '',
+      createdAt: now
+    });
+
     return savedRecord;
   }
 
