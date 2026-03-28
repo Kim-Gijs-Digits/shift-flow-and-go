@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="nl" data-lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title data-i18n="appTitle">Shift-Flow</title>
+
+  <style>
+    :root{
+      --bg: #071416;
+      --card: #0d1d20;
+      --text: #f4fbfb;
+      --muted: #9ec3c3;
+      --line: rgba(79, 214, 194, 0.16);
+      --glow: rgba(79, 214, 194, 0.18);
+    }
+
+    *{
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body{
+      width: 100%;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body{
+      min-height: 100vh;
+    }
+
+    .app{
+      min-height: 100vh;
+      padding:
+        calc(20px + env(safe-area-inset-top))
+        16px
+        calc(20px + env(safe-area-inset-bottom));
+      background:
+        radial-gradient(circle at top center, rgba(64, 220, 196, 0.08), transparent 34%),
+        linear-gradient(180deg, #081618 0%, #071416 100%);
+    }
+
+    .topbar{
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 5px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255,255,255,0.02);
+      box-shadow: 0 0 24px var(--glow);
+    }
+    .topbar-plain{
+      border: none;
+      background: transparent;
+      box-shadow: none;
+      padding: 0;
+      justify-content: center;
+}
+
+    .logo-badge{
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      flex: 0 0 72px;
+      display: block;
+    }
+
+    .logo-wordmark{
+      height: 100px;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+      display: block;
+      margin-left: -20px;
+    }
+
+    .screen-card{
+      width: 100%;
+      min-height: 50px;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      box-shadow: 0 0 24px var(--glow);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .placeholder{
+      text-align: center;
+    }
+
+    .placeholder h1{
+      font-size: 24px;
+      line-height: 1.2;
+      margin-bottom: 8px;
+      letter-spacing: 0.4px;
+    }
+
+    .placeholder p{
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .home-search{
+  width: 100%;
+  height: 56px;
+  border: 1px solid rgba(79, 214, 194, 0.22);
+  border-radius: 18px;
+  background: rgba(79, 214, 194, 0.08);
+  color: #eafffb;
+  padding: 0 18px;
+  font-size: 16px;
+  outline: none;
+  box-shadow: 0 0 18px rgba(79, 214, 194, 0.10);
+}
+
+.home-search::placeholder{
+  color: #9fd6cc;
+}
+.add-customer-btn{
+  width: 100%;
+  height: 40px;
+  margin-top: 0px;
+  border: 1px solid rgba(255, 90, 90, 0.26);
+  border-radius: 18px;
+  background: rgba(255, 90, 90, 0.08);
+  color: #ffe8e8;
+  padding: 0 18px;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 0 18px rgba(255, 90, 90, 0.10);
+}
+.add-customer-card{
+  margin-top: 12px;
+}
+.search-wrap{
+  position: relative;
+  width: 100%;
+}
+
+.search-icon{
+  position: absolute;
+  left: 10px;
+  top: 40%;
+  transform: translateY(-50%);
+  color: #9fd6cc;
+  font-size: 50px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.search-wrap .home-search{
+  padding-left: 44px;
+}
+.live-search-layer{
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  min-height: 0;
+  max-height: 55vh;
+  overflow-y: auto;
+  border: 1px solid rgba(79, 214, 194, 0.22);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(10, 31, 34, 0.98), rgba(8, 24, 27, 0.98));
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.34), 0 0 24px rgba(79, 214, 194, 0.12);
+  backdrop-filter: blur(8px);
+}
+.settings-fab{
+  position: fixed;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(79, 214, 194, 0.22);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(15, 39, 42, 0.96), rgba(9, 27, 30, 0.96));
+  color: #dffcf8;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.30), 0 0 18px rgba(79, 214, 194, 0.12);
+  z-index: 40;
+  line-height: 1;
+  padding: 0;
+}
+
+.settings-fab:active{
+  transform: scale(0.97);
+}
+#settingsPanelHost{
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+}
+
+#settingsPanelHost[hidden]{
+  display: none;
+}
+
+.settings-panel-placeholder{
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 10, 12, 0.58);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 14px;
+}
+
+.settings-panel-card{
+  width: 100%;
+  max-width: 520px;
+  max-height: 80vh;
+  overflow-y: auto;
+  border: 1px solid rgba(79, 214, 194, 0.22);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(20, 60, 64, 0.98), rgba(11, 34, 37, 0.98));
+  color: #f4fbfb;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.34), 0 0 24px rgba(79, 214, 194, 0.12);
+  padding: 16px;
+}
+
+.settings-panel-top{
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.settings-close-btn{
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(79, 214, 194, 0.22);
+  border-radius: 14px;
+  background: rgba(79, 214, 194, 0.08);
+  color: #eafffb;
+  font-size: 20px;
+}
+
+.settings-block{
+  margin-top: 16px;
+}
+
+.settings-block h3{
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.language-list{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.lang-btn{
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid rgba(79, 214, 194, 0.22);
+  border-radius: 14px;
+  background: rgba(79, 214, 194, 0.08);
+  color: #eafffb;
+  font-size: 14px;
+}
+#customerInputHost{
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+}
+
+#customerInputHost[hidden]{
+  display: none;
+}
+#customerOverlayHost{
+  position: fixed;
+  inset: 0;
+  z-index: 75;
+}
+
+#customerOverlayHost[hidden]{
+  display: none;
+}
+  </style>
+</head>
+<body>
+  <main class="app">
+ <header class="topbar topbar-plain">
+  <img src="logo-wordmark.png" alt="Shift-Flow" class="logo-wordmark">
+</header>
+
+<section class="screen-card empty-home">
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+<input
+  type="text"
+  id="customerSearchInput"
+  class="home-search"
+  placeholder="Zoek klant, adres, gemeente, postcode of code"
+  data-i18n-placeholder="searchPlaceholder"
+  autocomplete="off"
+>
+    
+    <div id="liveSearchLayer" class="live-search-layer" hidden></div>
+  </div>
+</section>
+<section class="screen-card add-customer-card">
+<button id="openCustomerInputBtn" class="add-customer-btn" data-i18n="newCustomerBtn">+ Nieuwe klant</button>
+</section>
+<div id="settingsPanelHost" hidden></div>
+<div id="customerInputHost" hidden></div>
+<div id="customerOverlayHost" hidden></div>
+<button id="openSettingsBtn" class="settings-fab" aria-label="Instellingen">⚙</button>
+  </main>
+  <script src="customers-core.js"></script>
+<script>
+const openSettingsBtn = document.getElementById('openSettingsBtn');
+const settingsPanelHost = document.getElementById('settingsPanelHost');
+const openCustomerInputBtn = document.getElementById('openCustomerInputBtn');
+const customerInputHost = document.getElementById('customerInputHost');
+const customerOverlayHost = document.getElementById('customerOverlayHost');
+const customerSearchInput = document.getElementById('customerSearchInput');
+const liveSearchLayer = document.getElementById('liveSearchLayer');
+
+const SHIFT_FLOW_RUNTIME = {
+  companyId: 'vanoirschot-demo',
+  userId: 'kim-local-test',
+  defaultCountryCode: ''
+};
+
+  const SHIFT_FLOW_COUNTRY_CODES = [
+  { code: '+93', label: 'Afghanistan (+93)' },
+  { code: '+355', label: 'Albania (+355)' },
+  { code: '+213', label: 'Algeria (+213)' },
+  { code: '+376', label: 'Andorra (+376)' },
+  { code: '+244', label: 'Angola (+244)' },
+  { code: '+1', label: 'Antigua and Barbuda (+1)' },
+  { code: '+54', label: 'Argentina (+54)' },
+  { code: '+374', label: 'Armenia (+374)' },
+  { code: '+61', label: 'Australia (+61)' },
+  { code: '+43', label: 'Austria (+43)' },
+  { code: '+994', label: 'Azerbaijan (+994)' },
+  { code: '+1', label: 'Bahamas (+1)' },
+  { code: '+973', label: 'Bahrain (+973)' },
+  { code: '+880', label: 'Bangladesh (+880)' },
+  { code: '+1', label: 'Barbados (+1)' },
+  { code: '+375', label: 'Belarus (+375)' },
+  { code: '+32', label: 'Belgium (+32)' },
+  { code: '+501', label: 'Belize (+501)' },
+  { code: '+229', label: 'Benin (+229)' },
+  { code: '+975', label: 'Bhutan (+975)' },
+  { code: '+591', label: 'Bolivia (+591)' },
+  { code: '+387', label: 'Bosnia and Herzegovina (+387)' },
+  { code: '+267', label: 'Botswana (+267)' },
+  { code: '+55', label: 'Brazil (+55)' },
+  { code: '+673', label: 'Brunei (+673)' },
+  { code: '+359', label: 'Bulgaria (+359)' },
+  { code: '+226', label: 'Burkina Faso (+226)' },
+  { code: '+257', label: 'Burundi (+257)' },
+  { code: '+238', label: 'Cabo Verde (+238)' },
+  { code: '+855', label: 'Cambodia (+855)' },
+  { code: '+237', label: 'Cameroon (+237)' },
+  { code: '+1', label: 'Canada (+1)' },
+  { code: '+236', label: 'Central African Republic (+236)' },
+  { code: '+235', label: 'Chad (+235)' },
+  { code: '+56', label: 'Chile (+56)' },
+  { code: '+86', label: 'China (+86)' },
+  { code: '+57', label: 'Colombia (+57)' },
+  { code: '+269', label: 'Comoros (+269)' },
+  { code: '+242', label: 'Congo (+242)' },
+  { code: '+243', label: 'Congo (DRC) (+243)' },
+  { code: '+506', label: 'Costa Rica (+506)' },
+  { code: '+385', label: 'Croatia (+385)' },
+  { code: '+53', label: 'Cuba (+53)' },
+  { code: '+357', label: 'Cyprus (+357)' },
+  { code: '+420', label: 'Czechia (+420)' },
+  { code: '+45', label: 'Denmark (+45)' },
+  { code: '+253', label: 'Djibouti (+253)' },
+  { code: '+1', label: 'Dominica (+1)' },
+  { code: '+1', label: 'Dominican Republic (+1)' },
+  { code: '+593', label: 'Ecuador (+593)' },
+  { code: '+20', label: 'Egypt (+20)' },
+  { code: '+503', label: 'El Salvador (+503)' },
+  { code: '+240', label: 'Equatorial Guinea (+240)' },
+  { code: '+291', label: 'Eritrea (+291)' },
+  { code: '+372', label: 'Estonia (+372)' },
+  { code: '+268', label: 'Eswatini (+268)' },
+  { code: '+251', label: 'Ethiopia (+251)' },
+  { code: '+679', label: 'Fiji (+679)' },
+  { code: '+358', label: 'Finland (+358)' },
+  { code: '+33', label: 'France (+33)' },
+  { code: '+241', label: 'Gabon (+241)' },
+  { code: '+220', label: 'Gambia (+220)' },
+  { code: '+995', label: 'Georgia (+995)' },
+  { code: '+49', label: 'Germany (+49)' },
+  { code: '+233', label: 'Ghana (+233)' },
+  { code: '+30', label: 'Greece (+30)' },
+  { code: '+1', label: 'Grenada (+1)' },
+  { code: '+502', label: 'Guatemala (+502)' },
+  { code: '+224', label: 'Guinea (+224)' },
+  { code: '+245', label: 'Guinea-Bissau (+245)' },
+  { code: '+592', label: 'Guyana (+592)' },
+  { code: '+509', label: 'Haiti (+509)' },
+  { code: '+504', label: 'Honduras (+504)' },
+  { code: '+36', label: 'Hungary (+36)' },
+  { code: '+354', label: 'Iceland (+354)' },
+  { code: '+91', label: 'India (+91)' },
+  { code: '+62', label: 'Indonesia (+62)' },
+  { code: '+98', label: 'Iran (+98)' },
+  { code: '+964', label: 'Iraq (+964)' },
+  { code: '+353', label: 'Ireland (+353)' },
+  { code: '+972', label: 'Israel (+972)' },
+  { code: '+39', label: 'Italy (+39)' },
+  { code: '+225', label: "Ivory Coast (+225)" },
+  { code: '+1', label: 'Jamaica (+1)' },
+  { code: '+81', label: 'Japan (+81)' },
+  { code: '+962', label: 'Jordan (+962)' },
+  { code: '+7', label: 'Kazakhstan (+7)' },
+  { code: '+254', label: 'Kenya (+254)' },
+  { code: '+686', label: 'Kiribati (+686)' },
+  { code: '+383', label: 'Kosovo (+383)' },
+  { code: '+965', label: 'Kuwait (+965)' },
+  { code: '+996', label: 'Kyrgyzstan (+996)' },
+  { code: '+856', label: 'Laos (+856)' },
+  { code: '+371', label: 'Latvia (+371)' },
+  { code: '+961', label: 'Lebanon (+961)' },
+  { code: '+266', label: 'Lesotho (+266)' },
+  { code: '+231', label: 'Liberia (+231)' },
+  { code: '+218', label: 'Libya (+218)' },
+  { code: '+423', label: 'Liechtenstein (+423)' },
+  { code: '+370', label: 'Lithuania (+370)' },
+  { code: '+352', label: 'Luxembourg (+352)' },
+  { code: '+261', label: 'Madagascar (+261)' },
+  { code: '+265', label: 'Malawi (+265)' },
+  { code: '+60', label: 'Malaysia (+60)' },
+  { code: '+960', label: 'Maldives (+960)' },
+  { code: '+223', label: 'Mali (+223)' },
+  { code: '+356', label: 'Malta (+356)' },
+  { code: '+692', label: 'Marshall Islands (+692)' },
+  { code: '+222', label: 'Mauritania (+222)' },
+  { code: '+230', label: 'Mauritius (+230)' },
+  { code: '+52', label: 'Mexico (+52)' },
+  { code: '+691', label: 'Micronesia (+691)' },
+  { code: '+373', label: 'Moldova (+373)' },
+  { code: '+377', label: 'Monaco (+377)' },
+  { code: '+976', label: 'Mongolia (+976)' },
+  { code: '+382', label: 'Montenegro (+382)' },
+  { code: '+212', label: 'Morocco (+212)' },
+  { code: '+258', label: 'Mozambique (+258)' },
+  { code: '+95', label: 'Myanmar (+95)' },
+  { code: '+264', label: 'Namibia (+264)' },
+  { code: '+674', label: 'Nauru (+674)' },
+  { code: '+977', label: 'Nepal (+977)' },
+  { code: '+31', label: 'Netherlands (+31)' },
+  { code: '+64', label: 'New Zealand (+64)' },
+  { code: '+505', label: 'Nicaragua (+505)' },
+  { code: '+227', label: 'Niger (+227)' },
+  { code: '+234', label: 'Nigeria (+234)' },
+  { code: '+850', label: 'North Korea (+850)' },
+  { code: '+389', label: 'North Macedonia (+389)' },
+  { code: '+47', label: 'Norway (+47)' },
+  { code: '+968', label: 'Oman (+968)' },
+  { code: '+92', label: 'Pakistan (+92)' },
+  { code: '+680', label: 'Palau (+680)' },
+  { code: '+970', label: 'Palestine (+970)' },
+  { code: '+507', label: 'Panama (+507)' },
+  { code: '+675', label: 'Papua New Guinea (+675)' },
+  { code: '+595', label: 'Paraguay (+595)' },
+  { code: '+51', label: 'Peru (+51)' },
+  { code: '+63', label: 'Philippines (+63)' },
+  { code: '+48', label: 'Poland (+48)' },
+  { code: '+351', label: 'Portugal (+351)' },
+  { code: '+974', label: 'Qatar (+974)' },
+  { code: '+40', label: 'Romania (+40)' },
+  { code: '+7', label: 'Russia (+7)' },
+  { code: '+250', label: 'Rwanda (+250)' },
+  { code: '+1', label: 'Saint Kitts and Nevis (+1)' },
+  { code: '+1', label: 'Saint Lucia (+1)' },
+  { code: '+1', label: 'Saint Vincent and the Grenadines (+1)' },
+  { code: '+685', label: 'Samoa (+685)' },
+  { code: '+378', label: 'San Marino (+378)' },
+  { code: '+239', label: 'Sao Tome and Principe (+239)' },
+  { code: '+966', label: 'Saudi Arabia (+966)' },
+  { code: '+221', label: 'Senegal (+221)' },
+  { code: '+381', label: 'Serbia (+381)' },
+  { code: '+248', label: 'Seychelles (+248)' },
+  { code: '+232', label: 'Sierra Leone (+232)' },
+  { code: '+65', label: 'Singapore (+65)' },
+  { code: '+421', label: 'Slovakia (+421)' },
+  { code: '+386', label: 'Slovenia (+386)' },
+  { code: '+677', label: 'Solomon Islands (+677)' },
+  { code: '+252', label: 'Somalia (+252)' },
+  { code: '+27', label: 'South Africa (+27)' },
+  { code: '+82', label: 'South Korea (+82)' },
+  { code: '+211', label: 'South Sudan (+211)' },
+  { code: '+34', label: 'Spain (+34)' },
+  { code: '+94', label: 'Sri Lanka (+94)' },
+  { code: '+249', label: 'Sudan (+249)' },
+  { code: '+597', label: 'Suriname (+597)' },
+  { code: '+46', label: 'Sweden (+46)' },
+  { code: '+41', label: 'Switzerland (+41)' },
+  { code: '+963', label: 'Syria (+963)' },
+  { code: '+886', label: 'Taiwan (+886)' },
+  { code: '+992', label: 'Tajikistan (+992)' },
+  { code: '+255', label: 'Tanzania (+255)' },
+  { code: '+66', label: 'Thailand (+66)' },
+  { code: '+670', label: 'Timor-Leste (+670)' },
+  { code: '+228', label: 'Togo (+228)' },
+  { code: '+676', label: 'Tonga (+676)' },
+  { code: '+1', label: 'Trinidad and Tobago (+1)' },
+  { code: '+216', label: 'Tunisia (+216)' },
+  { code: '+90', label: 'Turkey (+90)' },
+  { code: '+993', label: 'Turkmenistan (+993)' },
+  { code: '+688', label: 'Tuvalu (+688)' },
+  { code: '+256', label: 'Uganda (+256)' },
+  { code: '+380', label: 'Ukraine (+380)' },
+  { code: '+971', label: 'United Arab Emirates (+971)' },
+  { code: '+44', label: 'United Kingdom (+44)' },
+  { code: '+1', label: 'United States (+1)' },
+  { code: '+598', label: 'Uruguay (+598)' },
+  { code: '+998', label: 'Uzbekistan (+998)' },
+  { code: '+678', label: 'Vanuatu (+678)' },
+  { code: '+379', label: 'Vatican City (+379)' },
+  { code: '+58', label: 'Venezuela (+58)' },
+  { code: '+84', label: 'Vietnam (+84)' },
+  { code: '+967', label: 'Yemen (+967)' },
+  { code: '+260', label: 'Zambia (+260)' },
+  { code: '+263', label: 'Zimbabwe (+263)' }
+];
+
+function normalizePhoneNumber(rawValue = '', defaultCountryCode = '') {
+  const input = String(rawValue || '').trim();
+
+  if (!input) return '';
+
+  let cleaned = input.replace(/[^\d+]/g, '');
+
+  if (cleaned.startsWith('00')) {
+    cleaned = `+${cleaned.slice(2)}`;
+  }
+
+  if (cleaned.startsWith('+')) {
+    return `+${cleaned.slice(1).replace(/\D/g, '')}`;
+  }
+
+  cleaned = cleaned.replace(/\D/g, '');
+
+  if (!cleaned) return '';
+
+  if (cleaned.startsWith('0') && defaultCountryCode) {
+    return `${defaultCountryCode}${cleaned.slice(1)}`;
+  }
+
+  return cleaned;
+}
+
+function normalizeWebsiteUrl(rawValue = '') {
+  const input = String(rawValue || '').trim();
+
+  if (!input) return '';
+
+  if (/^https?:\/\//i.test(input)) {
+    return input;
+  }
+
+  return `https://${input}`;
+}
+
+function normalizeAddressValue(rawValue = '') {
+  return String(rawValue || '').trim();
+}
+
+  if (window.ShiftFlowCustomers?.setRuntimeContext) {
+    window.ShiftFlowCustomers.setRuntimeContext(SHIFT_FLOW_RUNTIME);
+  }
+  
+  async function loadSettingsPanel() {
+    if (!settingsPanelHost) return;
+
+    try {
+      const response = await fetch('settings-panel.html');
+      const html = await response.text();
+      settingsPanelHost.innerHTML = html;
+      const closeSettingsBtn = settingsPanelHost.querySelector('#closeSettingsBtn');
+
+if (closeSettingsBtn) {
+  closeSettingsBtn.addEventListener('click', () => {
+    settingsPanelHost.hidden = true;
+  });
+}
+const languageSelect = settingsPanelHost.querySelector('#languageSelect');
+const defaultCountryCodeSelect = settingsPanelHost.querySelector('#defaultCountryCodeSelect');
+
+if (defaultCountryCodeSelect) {
+  SHIFT_FLOW_COUNTRY_CODES.forEach(country => {
+    const option = document.createElement('option');
+    option.value = country.code;
+    option.textContent = country.label;
+    defaultCountryCodeSelect.appendChild(option);
+  });
+
+  defaultCountryCodeSelect.value = SHIFT_FLOW_RUNTIME.defaultCountryCode || '';
+
+  defaultCountryCodeSelect.addEventListener('change', (event) => {
+    const nextCode = event.target.value || '';
+    SHIFT_FLOW_RUNTIME.defaultCountryCode = nextCode;
+  });
+}
+
+if (languageSelect) {
+  languageSelect.value = document.documentElement.dataset.lang || 'nl';
+
+  languageSelect.addEventListener('change', (event) => {
+    const nextLang = event.target.value;
+
+    if (window.applyShiftFlowTranslations) {
+      window.applyShiftFlowTranslations(nextLang);
+    }
+  });
+}
+  } catch (error) {
+      console.error('Settings panel kon niet geladen worden.', error);
+    }
+  }
+
+  loadSettingsPanel();
+
+  async function loadCustomerInputPanel() {
+  if (!customerInputHost) return;
+
+   try {
+    const response = await fetch('customer-input-flow.html');
+    const html = await response.text();
+    customerInputHost.innerHTML = html;
+
+    if (window.applyShiftFlowTranslations) {
+      const activeLang = document.documentElement.dataset.lang || 'nl';
+      window.applyShiftFlowTranslations(activeLang);
+    }
+
+    const mainPhotoInput = customerInputHost.querySelector('#customerMainPhotoInput');
+    const mainPhotoPreviewImg = customerInputHost.querySelector('#customerMainPhotoPreviewImg');
+    const mainPhotoPlaceholderText = customerInputHost.querySelector('#customerMainPhotoPlaceholderText');
+
+  if (mainPhotoInput && mainPhotoPreviewImg && mainPhotoPlaceholderText) {
+  mainPhotoInput.addEventListener('change', () => {
+    const file = mainPhotoInput.files && mainPhotoInput.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      mainPhotoPreviewImg.src = reader.result;
+      mainPhotoPreviewImg.style.display = 'block';
+      mainPhotoPlaceholderText.style.display = 'none';
+    };
+
+    reader.readAsDataURL(file);
+  });
+
+  mainPhotoPreviewImg.addEventListener('click', () => {
+    mainPhotoInput.value = '';
+    mainPhotoPreviewImg.src = '';
+    mainPhotoPreviewImg.style.display = 'none';
+    mainPhotoPlaceholderText.style.display = '';
+  });
+}
+
+    const saveBtn = customerInputHost.querySelector('#saveCustomerInputBtn');
+
+    if (saveBtn) {
+      saveBtn.addEventListener('click', async () => {
+       const customerData = {
+  name: customerInputHost.querySelector('#customerNameInput')?.value?.trim() || '',
+ address: normalizeAddressValue(
+  customerInputHost.querySelector('#customerAddressInput')?.value || ''
+),
+  gateCode: customerInputHost.querySelector('#customerGateCodeInput')?.value?.trim() || '',
+  contact: customerInputHost.querySelector('#customerContactInput')?.value?.trim() || '',
+ phone: normalizePhoneNumber(
+  customerInputHost.querySelector('#customerPhoneInput')?.value || '',
+  SHIFT_FLOW_RUNTIME.defaultCountryCode
+),
+  website: normalizeWebsiteUrl(
+  customerInputHost.querySelector('#customerWebsiteInput')?.value || ''
+),
+  driverInstructions: customerInputHost.querySelector('#customerDriverInstructionsInput')?.value?.trim() || '',
+  dropoffInfo: customerInputHost.querySelector('#customerDropoffInput')?.value?.trim() || '',
+  openingHours: customerInputHost.querySelector('#customerOpeningHoursInput')?.value?.trim() || '',
+  notes: customerInputHost.querySelector('#customerNotesInput')?.value?.trim() || '',
+ mainPhotoUrl: customerInputHost.querySelector('#customerMainPhotoPreviewImg')?.getAttribute('src') || ''
+};
+
+        try {
+          const savedCustomer = await window.ShiftFlowCustomers.saveCustomer(customerData);
+          console.log('SHIFT-FLOW saved customer draft:', savedCustomer);
+          customerInputHost.hidden = true;
+        } catch (error) {
+          console.error('SHIFT-FLOW save failed:', error);
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Customer input panel kon niet geladen worden.', error);
+  }
+}
+
+loadCustomerInputPanel();
+
+async function loadCustomerOverlayPanel() {
+  if (!customerOverlayHost) return;
+
+  try {
+    const response = await fetch('customer-overlay.html');
+    const html = await response.text();
+    customerOverlayHost.innerHTML = html;
+
+    if (window.applyShiftFlowTranslations) {
+      const activeLang = document.documentElement.dataset.lang || 'nl';
+      window.applyShiftFlowTranslations(activeLang);
+    }
+  } catch (error) {
+    console.error('Customer overlay kon niet geladen worden.', error);
+  }
+}
+
+loadCustomerOverlayPanel();
+
+ if (openSettingsBtn) {
+  openSettingsBtn.addEventListener('click', () => {
+    if (!settingsPanelHost) return;
+    settingsPanelHost.hidden = false;
+  });
+}
+if (openCustomerInputBtn) {
+  openCustomerInputBtn.addEventListener('click', () => {
+    if (!customerInputHost) return;
+
+    const customerFields = customerInputHost.querySelectorAll('input[type="text"], textarea');
+    customerFields.forEach(field => {
+      field.value = '';
+    });
+
+    const mainPhotoInput = customerInputHost.querySelector('#customerMainPhotoInput');
+    const mainPhotoPreviewImg = customerInputHost.querySelector('#customerMainPhotoPreviewImg');
+    const mainPhotoPlaceholderText = customerInputHost.querySelector('#customerMainPhotoPlaceholderText');
+
+    if (mainPhotoInput) {
+      mainPhotoInput.value = '';
+    }
+
+    if (mainPhotoPreviewImg) {
+      mainPhotoPreviewImg.src = '';
+      mainPhotoPreviewImg.style.display = 'none';
+    }
+
+    if (mainPhotoPlaceholderText) {
+      mainPhotoPlaceholderText.style.display = '';
+    }
+
+    customerInputHost.hidden = false;
+  });
+}
+
+if (customerInputHost) {
+  customerInputHost.addEventListener('click', (event) => {
+    const closeBtn = event.target.closest('#closeCustomerInputBtn');
+    if (closeBtn) {
+      customerInputHost.hidden = true;
+    }
+  });
+}
+if (customerOverlayHost) {
+  customerOverlayHost.addEventListener('click', (event) => {
+    const closeBtn = event.target.closest('#closeCustomerOverlayBtn');
+    const editBtn = event.target.closest('#editCustomerOverlayBtn');
+
+    if (closeBtn) {
+      customerOverlayHost.hidden = true;
+    }
+
+    if (editBtn) {
+      customerOverlayHost.hidden = true;
+      if (customerInputHost) {
+        customerInputHost.hidden = false;
+      }
+    }
+  });
+}
+if (settingsPanelHost) {
+  settingsPanelHost.addEventListener('click', (event) => {
+    const closeBtn = event.target.closest('#closeSettingsBtn');
+    if (closeBtn) {
+      settingsPanelHost.hidden = true;
+    }
+  });
+}
+function escapeHtml(value = '') {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+function renderLiveSearchResults(customers = []) {
+  if (!liveSearchLayer) return;
+
+  if (!customers.length) {
+    liveSearchLayer.innerHTML = '';
+    liveSearchLayer.hidden = true;
+    return;
+  }
+
+  liveSearchLayer.innerHTML = customers.map(customer => `
+    <button
+      type="button"
+      class="live-search-result"
+      data-customer-id="${escapeHtml(customer.id)}"
+      style="
+        width: 100%;
+        display: block;
+        text-align: left;
+        border: none;
+        border-bottom: 1px solid rgba(79, 214, 194, 0.12);
+        background: transparent;
+        color: #eafffb;
+        padding: 14px 16px;
+      "
+    >
+      <div style="font-size: 15px; font-weight: 700;">${escapeHtml(customer.name || '(zonder naam)')}</div>
+      <div style="font-size: 13px; color: #9fd6cc; margin-top: 4px;">${escapeHtml(customer.address || '')}</div>
+    </button>
+  `).join('');
+
+const resultButtons = liveSearchLayer.querySelectorAll('.live-search-result');
+
+resultButtons.forEach(button => {
+  button.addEventListener('click', async () => {
+    const customerId = button.dataset.customerId || '';
+    if (!customerId) return;
+
+    try {
+      const customer = await window.ShiftFlowCustomers.getCustomerById(customerId);
+      if (!customer) return;
+
+const overlayPhotoEl = customerOverlayHost.querySelector('.customer-overlay-photo');
+const nameEl = customerOverlayHost.querySelector('[data-customer-field="name"]');
+const addressEl = customerOverlayHost.querySelector('[data-customer-field="address"]');
+const gateCodeEl = customerOverlayHost.querySelector('[data-customer-field="gateCode"]');
+const contactEl = customerOverlayHost.querySelector('[data-customer-field="contact"]');
+const phoneEl = customerOverlayHost.querySelector('[data-customer-field="phone"]');
+const websiteEl = customerOverlayHost.querySelector('[data-customer-field="website"]');
+const driverInstructionsEl = customerOverlayHost.querySelector('[data-customer-field="driverInstructions"]');
+const dropoffInfoEl = customerOverlayHost.querySelector('[data-customer-field="dropoffInfo"]');
+const openingHoursEl = customerOverlayHost.querySelector('[data-customer-field="openingHours"]');
+const notesEl = customerOverlayHost.querySelector('[data-customer-field="notes"]');
+
+if (overlayPhotoEl) {
+  if (customer.mainPhotoUrl) {
+    overlayPhotoEl.hidden = false;
+    overlayPhotoEl.style.display = 'flex';
+    overlayPhotoEl.innerHTML = `<img src="${customer.mainPhotoUrl}" alt="">`;
+  } else {
+    overlayPhotoEl.hidden = true;
+    overlayPhotoEl.style.display = 'none';
+    overlayPhotoEl.innerHTML = '';
+  }
+}
+
+
+if (nameEl) nameEl.textContent = customer.name || '';
+if (addressEl) {
+  const cleanAddress = String(customer.address || '').trim();
+
+  if (cleanAddress) {
+    const geoQuery = encodeURIComponent(cleanAddress);
+
+    addressEl.innerHTML = `
+      <a
+        href="geo:0,0?q=${geoQuery}"
+        style="color:#7ee9d6;text-decoration:underline;word-break:break-word;"
+      >${escapeHtml(cleanAddress)}</a>
+    `;
+  } else {
+    addressEl.textContent = '';
+  }
+}
+if (gateCodeEl) gateCodeEl.textContent = customer.gateCode || '';
+if (contactEl) contactEl.textContent = customer.contact || '';
+if (phoneEl) {
+  const cleanPhone = String(customer.phone || '').trim();
+  const activeLang = document.documentElement.dataset.lang || 'nl';
+  const dict =
+    (window.SHIFTFLOW_TRANSLATIONS && window.SHIFTFLOW_TRANSLATIONS[activeLang]) ||
+    (window.SHIFTFLOW_TRANSLATIONS && window.SHIFTFLOW_TRANSLATIONS.nl) ||
+    {};
+
+  if (cleanPhone) {
+    const whatsappPhone = cleanPhone.replace(/[^\d]/g, '');
+
+    phoneEl.innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="word-break:break-word;">${escapeHtml(cleanPhone)}</div>
+
+       
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+  <a
+    href="tel:${escapeHtml(cleanPhone)}"
+    aria-label="${escapeHtml(dict.customerPhoneCallLabel || 'Call')}"
+    title="${escapeHtml(dict.customerPhoneCallLabel || 'Call')}"
+    style="display:flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid rgba(79,214,194,0.22);border-radius:12px;background:rgba(79,214,194,0.08);color:#7ee9d6;text-decoration:none;font-size:20px;"
+  >📞</a>
+
+  <a
+    href="sms:${escapeHtml(cleanPhone)}"
+    aria-label="${escapeHtml(dict.customerPhoneSmsLabel || 'SMS')}"
+    title="${escapeHtml(dict.customerPhoneSmsLabel || 'SMS')}"
+    style="display:flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid rgba(79,214,194,0.22);border-radius:12px;background:rgba(79,214,194,0.08);color:#7ee9d6;text-decoration:none;font-size:18px;"
+  >💬</a>
+
+<a
+  href="https://wa.me/${escapeHtml(whatsappPhone)}?call"
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="${escapeHtml(dict.customerPhoneWhatsappCallLabel || 'WhatsApp call')}"
+  title="${escapeHtml(dict.customerPhoneWhatsappCallLabel || 'WhatsApp call')}"
+  style="display:flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid rgba(79,214,194,0.22);border-radius:12px;background:rgba(79,214,194,0.08);text-decoration:none;"
+>
+  <span style="position:relative;display:block;width:22px;height:22px;">
+    <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true" style="display:block;">
+      <circle cx="16" cy="16" r="15" fill="#25D366"></circle>
+      <path d="M23.2 19.3c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1c-.3-.2-1.4-.5-2.7-1.7-1-0.9-1.7-2-1.9-2.3-.2-.3 0-.5.1-.7.1-.1.3-.4.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.7-1-2.4-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.3s1 2.6 1.2 2.8c.1.2 2 3.1 4.9 4.3 2.9 1.3 2.9.9 3.4.9.5 0 1.9-.8 2.1-1.5.3-.7.3-1.3.2-1.5-.1-.2-.3-.2-.6-.4z" fill="#fff"></path>
+    </svg>
+    <span style="position:absolute;right:-4px;bottom:-4px;font-size:11px;line-height:1;">📞</span>
+  </span>
+</a>
+
+<a
+  href="https://wa.me/${escapeHtml(whatsappPhone)}"
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label="${escapeHtml(dict.customerPhoneWhatsappMessageLabel || 'WhatsApp message')}"
+  title="${escapeHtml(dict.customerPhoneWhatsappMessageLabel || 'WhatsApp message')}"
+  style="display:flex;align-items:center;justify-content:center;width:42px;height:42px;border:1px solid rgba(79,214,194,0.22);border-radius:12px;background:rgba(79,214,194,0.08);text-decoration:none;"
+>
+  <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true" style="display:block;">
+    <circle cx="16" cy="16" r="15" fill="#25D366"></circle>
+    <path d="M23.2 19.3c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1c-.3-.2-1.4-.5-2.7-1.7-1-0.9-1.7-2-1.9-2.3-.2-.3 0-.5.1-.7.1-.1.3-.4.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.7-1-2.4-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.3s1 2.6 1.2 2.8c.1.2 2 3.1 4.9 4.3 2.9 1.3 2.9.9 3.4.9.5 0 1.9-.8 2.1-1.5.3-.7.3-1.3.2-1.5-.1-.2-.3-.2-.6-.4z" fill="#fff"></path>
+  </svg>
+</a>
+</div>
+
+      </div>
+    `;
+  } else {
+    phoneEl.textContent = '';
+  }
+}
+if (websiteEl) {
+  if (customer.website) {
+    websiteEl.innerHTML = `
+      <a
+        href="${escapeHtml(customer.website)}"
+        target="_blank"
+        rel="noopener noreferrer"
+        style="color:#7ee9d6;text-decoration:underline;word-break:break-word;"
+      >${escapeHtml(customer.website)}</a>
+    `;
+  } else {
+    websiteEl.textContent = '';
+  }
+}
+if (driverInstructionsEl) driverInstructionsEl.textContent = customer.driverInstructions || '';
+if (dropoffInfoEl) dropoffInfoEl.textContent = customer.dropoffInfo || '';
+if (openingHoursEl) openingHoursEl.textContent = customer.openingHours || '';
+if (notesEl) notesEl.textContent = customer.notes || '';
+
+const addressBlock = addressEl?.closest('.customer-overlay-block');
+const contactBlock = contactEl?.closest('.customer-overlay-block');
+const deliveryBlock = driverInstructionsEl?.closest('.customer-overlay-block');
+const hoursBlock = openingHoursEl?.closest('.customer-overlay-block');
+const photosBlock = customerOverlayHost
+  ?.querySelector('[data-i18n="customerOverlayPhotosTitle"]')
+  ?.closest('.customer-overlay-block');
+
+function hasTextValue(value = '') {
+  return String(value || '').trim() !== '';
+}
+
+if (addressBlock) {
+  addressBlock.style.display =
+    (hasTextValue(customer.address) || hasTextValue(customer.gateCode))
+      ? ''
+      : 'none';
+}
+
+if (contactBlock) {
+  contactBlock.style.display =
+    (hasTextValue(customer.contact) || hasTextValue(customer.phone) || hasTextValue(customer.website))
+      ? ''
+      : 'none';
+}
+
+if (deliveryBlock) {
+  deliveryBlock.style.display =
+    (hasTextValue(customer.driverInstructions) || hasTextValue(customer.dropoffInfo))
+      ? ''
+      : 'none';
+}
+
+if (hoursBlock) {
+  hoursBlock.style.display =
+    (hasTextValue(customer.openingHours) || hasTextValue(customer.notes))
+      ? ''
+      : 'none';
+}
+
+if (photosBlock) {
+  photosBlock.style.display =
+    (Array.isArray(customer.detailPhotoUrls) && customer.detailPhotoUrls.length > 0)
+      ? ''
+      : 'none';
+}
+
+      liveSearchLayer.hidden = true;
+
+      if (customerOverlayHost) {
+        customerOverlayHost.hidden = false;
+      }
+    } catch (error) {
+      console.error('SHIFT-FLOW get customer failed:', error);
+    }
+  });
+});
+
+  liveSearchLayer.hidden = false;
+}
+
+if (customerSearchInput) {
+  customerSearchInput.addEventListener('input', async (event) => {
+    const query = event.target.value || '';
+
+    if (!query.trim()) {
+      renderLiveSearchResults([]);
+      return;
+    }
+
+    try {
+      const results = await window.ShiftFlowCustomers.searchCustomers(query);
+      renderLiveSearchResults(results);
+    } catch (error) {
+      console.error('SHIFT-FLOW live search failed:', error);
+    }
+  });
+}
+</script>
+<script>
+  function applyTranslations(lang) {
+    const dict = (window.SHIFTFLOW_TRANSLATIONS && window.SHIFTFLOW_TRANSLATIONS[lang])
+      || (window.SHIFTFLOW_TRANSLATIONS && window.SHIFTFLOW_TRANSLATIONS.nl)
+      || null;
+
+    if (!dict) return;
+
+    document.documentElement.lang = lang;
+    document.documentElement.dataset.lang = lang;
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (dict[key]) el.textContent = dict[key];
+    });
+
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.dataset.i18nPlaceholder;
+      if (dict[key]) el.placeholder = dict[key];
+    });
+  }
+
+  window.applyShiftFlowTranslations = applyTranslations;
+</script>
+ 
+<script src="translations.js"></script>
+<script>
+  applyShiftFlowTranslations('nl');
+</script>
+</body>
+</html>
