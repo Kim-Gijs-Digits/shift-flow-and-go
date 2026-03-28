@@ -1,6 +1,6 @@
 window.SHIFTFLOW_TRANSLATIONS = {
   nl: {
-    appTitle: "Shift-Flow",
+    appTitle: "Shift Flow & Go",
     searchPlaceholder: "Zoek klant, adres, gemeente, postcode of code",
     newCustomerBtn: "+ Nieuwe klant",
     settingsTitle: "Instellingen",
@@ -47,7 +47,7 @@ customerPhoneWhatsappMessageLabel: "WhatsApp bericht"
   },
 
   en: {
-    appTitle: "Shift-Flow",
+   appTitle: "Shift Flow & Go",
     searchPlaceholder: "Search customer, address, city, postal code or gate code",
     newCustomerBtn: "+ New customer",
     settingsTitle: "Settings",
@@ -94,7 +94,7 @@ customerPhoneWhatsappMessageLabel: "WhatsApp message"
   },
 
   fr: {
-    appTitle: "Shift-Flow",
+   appTitle: "Shift Flow & Go",
     searchPlaceholder: "Rechercher client, adresse, ville, code postal ou code portail",
     newCustomerBtn: "+ Nouveau client",
     settingsTitle: "Paramètres",
@@ -141,7 +141,7 @@ customerPhoneWhatsappMessageLabel: "Message WhatsApp"
   },
 
   de: {
-    appTitle: "Shift-Flow",
+   appTitle: "Shift Flow & Go",
     searchPlaceholder: "Kunde, Adresse, Ort, Postleitzahl oder Torcode suchen",
     newCustomerBtn: "+ Neuer Kunde",
     settingsTitle: "Einstellungen",
@@ -188,7 +188,7 @@ customerPhoneWhatsappMessageLabel: "WhatsApp-Nachricht"
   },
 
   es: {
-    appTitle: "Shift-Flow",
+  appTitle: "Shift Flow & Go",
     searchPlaceholder: "Buscar cliente, dirección, ciudad, código postal o código de puerta",
     newCustomerBtn: "+ Nuevo cliente",
     settingsTitle: "Ajustes",
@@ -235,7 +235,7 @@ customerPhoneWhatsappMessageLabel: "Mensaje de WhatsApp"
   },
 
   it: {
-    appTitle: "Shift-Flow",
+   appTitle: "Shift Flow & Go",
     searchPlaceholder: "Cerca cliente, indirizzo, città, CAP o codice cancello",
     newCustomerBtn: "+ Nuovo cliente",
     settingsTitle: "Impostazioni",
@@ -283,7 +283,7 @@ customerPhoneWhatsappMessageLabel: "Messaggio WhatsApp"
   },
 
   pl: {
-    appTitle: "Shift-Flow",
+   appTitle: "Shift Flow & Go",
     searchPlaceholder: "Szukaj klienta, adresu, miasta, kodu pocztowego lub kodu bramy",
     newCustomerBtn: "+ Nowy klient",
     settingsTitle: "Ustawienia",
@@ -330,7 +330,7 @@ customerPhoneWhatsappMessageLabel: "Wiadomość WhatsApp"
   },
 
   hu: {
-    appTitle: "Shift-Flow",
+    appTitle: "Shift Flow & Go",
     searchPlaceholder: "Ügyfél, cím, város, irányítószám vagy kapukód keresése",
     newCustomerBtn: "+ Új ügyfél",
     settingsTitle: "Beállítások",

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <link rel="manifest" href="manifest.json" />
 <meta name="theme-color" content="#071416" />
-<title data-i18n="appTitle">Shift-Flow</title>
+<title data-i18n="appTitle">Shift Flow & Go</title>
 
   <style>
     :root{
@@ -325,8 +325,23 @@
 <div id="customerOverlayHost" hidden></div>
 <button id="openSettingsBtn" class="settings-fab" aria-label="Instellingen">⚙</button>
   </main>
-  <script src="customers-core.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="customers-core.js"></script>
 <script>
+
+const SHIFT_FLOW_APP_CONFIG = {
+  storageMode: 'cloud',
+  firebase: {
+    apiKey: 'AIzaSyDNamkCmqyrUI5yMy8BSU3egNeXxdQxZC4',
+    authDomain: 'shift-flow-and-go.firebaseapp.com',
+    projectId: 'shift-flow-and-go',
+    storageBucket: 'shift-flow-and-go.firebasestorage.app',
+    messagingSenderId: '714657918665',
+    appId: '1:714657918665:web:19226dac978e1b3cca2718'
+  }
+};
+
 const openSettingsBtn = document.getElementById('openSettingsBtn');
 const settingsPanelHost = document.getElementById('settingsPanelHost');
 const openCustomerInputBtn = document.getElementById('openCustomerInputBtn');
@@ -335,11 +350,27 @@ const customerOverlayHost = document.getElementById('customerOverlayHost');
 const customerSearchInput = document.getElementById('customerSearchInput');
 const liveSearchLayer = document.getElementById('liveSearchLayer');
 
-const SHIFT_FLOW_RUNTIME = {
-  companyId: 'vanoirschot-demo',
-  userId: 'kim-local-test',
-  defaultCountryCode: ''
-};
+function getShiftFlowFirestore() {
+  const firebaseConfig = SHIFT_FLOW_APP_CONFIG.firebase || {};
+  const hasCompleteConfig =
+    firebaseConfig.apiKey &&
+    firebaseConfig.authDomain &&
+    firebaseConfig.projectId &&
+    firebaseConfig.appId;
+
+  if (!hasCompleteConfig) {
+    return null;
+  }
+
+  if (!window.firebase?.apps?.length) {
+    window.firebase.initializeApp(firebaseConfig);
+  }
+
+  return window.firebase.firestore();
+}
+
+const SHIFT_FLOW_DB = getShiftFlowFirestore();
+console.log('SHIFT FLOW & GO DB ready:', !!SHIFT_FLOW_DB);
 
   const SHIFT_FLOW_COUNTRY_CODES = [
   { code: '+93', label: 'Afghanistan (+93)' },
@@ -583,9 +614,12 @@ function normalizeAddressValue(rawValue = '') {
   return String(rawValue || '').trim();
 }
 
-  if (window.ShiftFlowCustomers?.setRuntimeContext) {
-    window.ShiftFlowCustomers.setRuntimeContext(SHIFT_FLOW_RUNTIME);
-  }
+if (window.ShiftFlowCustomers?.setRuntimeContext) {
+  window.ShiftFlowCustomers.setRuntimeContext({
+    ...SHIFT_FLOW_RUNTIME,
+    db: SHIFT_FLOW_DB
+  });
+}
   
   async function loadSettingsPanel() {
     if (!settingsPanelHost) return;

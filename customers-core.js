@@ -1,7 +1,9 @@
 window.ShiftFlowCustomers = (() => {
  let runtimeContext = {
   companyId: '',
-  userId: ''
+  userId: '',
+  storageMode: 'runtime',
+  db: null
 };
 
 let runtimeCustomers = [];
@@ -30,10 +32,17 @@ let runtimeCustomers = [];
     };
   }
 
-  function setRuntimeContext({ companyId = '', userId = '' } = {}) {
-    runtimeContext.companyId = String(companyId || '').trim();
-    runtimeContext.userId = String(userId || '').trim();
-  }
+ function setRuntimeContext({
+  companyId = '',
+  userId = '',
+  storageMode = 'runtime',
+  db = null
+} = {}) {
+  runtimeContext.companyId = String(companyId || '').trim();
+  runtimeContext.userId = String(userId || '').trim();
+  runtimeContext.storageMode = String(storageMode || 'runtime').trim() || 'runtime';
+  runtimeContext.db = db || null;
+}
 
   function getRuntimeContext() {
     return { ...runtimeContext };
@@ -44,6 +53,18 @@ let runtimeCustomers = [];
       throw new Error('Missing companyId in ShiftFlowCustomers runtime context.');
     }
   }
+  function getCustomersCollectionRef() {
+  requireCompanyId();
+
+  if (!runtimeContext.db) {
+    throw new Error('Missing Firestore db in ShiftFlowCustomers runtime context.');
+  }
+
+  return runtimeContext.db
+    .collection('companies')
+    .doc(runtimeContext.companyId)
+    .collection('customers');
+}
 
 async function searchCustomers(query = '') {
   requireCompanyId();
@@ -110,6 +131,12 @@ async function getCustomerById(customerId = '') {
     updatedBy: runtimeContext.userId || '',
     isActive: customerData.isActive !== false
   };
+
+  if (runtimeContext.storageMode === 'cloud') {
+    const customersRef = getCustomersCollectionRef();
+    await customersRef.doc(savedRecord.id).set(savedRecord);
+    return savedRecord;
+  }
 
   const existingIndex = runtimeCustomers.findIndex(customer =>
     customer.companyId === runtimeContext.companyId &&
