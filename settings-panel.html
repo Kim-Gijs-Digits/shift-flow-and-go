@@ -1,0 +1,112 @@
+<style>
+  .settings-panel-placeholder{
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 10, 12, 0.58);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 14px;
+  }
+
+  .settings-panel-card{
+    width: 100%;
+    max-width: 520px;
+    max-height: 80vh;
+    overflow-y: auto;
+    border: 1px solid rgba(79, 214, 194, 0.22);
+    border-radius: 24px;
+    background: linear-gradient(180deg, rgba(20, 60, 64, 0.98), rgba(11, 34, 37, 0.98));
+    color: #f4fbfb;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.34), 0 0 24px rgba(79, 214, 194, 0.12);
+    padding: 16px;
+  }
+
+  .settings-panel-top{
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+  }
+
+  .settings-close-btn{
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(79, 214, 194, 0.22);
+    border-radius: 14px;
+    background: rgba(79, 214, 194, 0.08);
+    color: #eafffb;
+    font-size: 20px;
+  }
+
+  .settings-block{
+    margin-top: 16px;
+  }
+
+  .settings-block h3{
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+
+.language-select{
+  width: 100%;
+  min-height: 46px;
+  padding: 0 14px;
+  padding-right: 42px;
+  border: 1px solid rgba(79, 214, 194, 0.22);
+  border-radius: 14px;
+  background: rgba(79, 214, 194, 0.08);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23eafffb' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+  color: #eafffb;
+  font-size: 15px;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  box-shadow: 0 0 18px rgba(79, 214, 194, 0.10);
+}
+
+  .language-select option{
+    background: #10292c;
+    color: #f4fbfb;
+  }
+</style>
+
+
+<div class="settings-panel-placeholder">
+  <div class="settings-panel-card">
+    <div class="settings-panel-top">
+      <button id="closeSettingsBtn" class="settings-close-btn" aria-label="Sluiten">✕</button>
+    </div>
+
+    <h2 data-i18n="settingsTitle">Instellingen</h2>
+
+  <div class="settings-block">
+  <h3 data-i18n="languageLabel">Taal</h3>
+  <select id="languageSelect" class="language-select">
+    <option value="nl">Nederlands</option>
+    <option value="en">English</option>
+    <option value="fr">Français</option>
+    <option value="de">Deutsch</option>
+    <option value="es">Español</option>
+    <option value="it">Italiano</option>
+    <option value="pl">Polski</option>
+    <option value="hu">Magyar</option>
+  </select>
+</div>
+
+<div class="settings-block">
+  <h3 data-i18n="defaultCountryCodeLabel">Standaard landcode</h3>
+  <select id="defaultCountryCodeSelect" class="language-select">
+    <option value="" data-i18n="defaultCountryCodePlaceholder">Kies standaard landcode</option>
+  </select>
+</div>
+
+<div class="settings-block">
+  <h3 data-i18n="laterLabel">Later</h3>
+  <p data-i18n="settingsComingSoon">Andere instellingen komen hier.</p>
+</div>
+  </div>
+</div>
