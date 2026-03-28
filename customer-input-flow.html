@@ -95,10 +95,22 @@
 
 <div class="customer-input-overlay">
   <div class="customer-input-card">
-    <div class="customer-input-top">
-      <button id="closeCustomerInputBtn" class="customer-input-action" aria-label="Sluiten">✕</button>
-      <button id="saveCustomerInputBtn" class="customer-input-action" data-i18n="saveBtn">Opslaan</button>
-    </div>
+  <div class="customer-input-top">
+  <button id="closeCustomerInputBtn" class="customer-input-action" aria-label="Sluiten">✕</button>
+
+  <button
+    id="deleteCustomerInputBtn"
+    class="customer-input-action"
+    type="button"
+    aria-label="Verwijderen"
+    data-i18n-aria-label="deleteCustomerBtn"
+    title="Verwijderen"
+    data-i18n-title="deleteCustomerBtn"
+    style="border-color: rgba(255, 90, 90, 0.28); background: rgba(255, 90, 90, 0.08); color: #ffe8e8;"
+  >🗑</button>
+
+  <button id="saveCustomerInputBtn" class="customer-input-action" data-i18n="saveBtn">Opslaan</button>
+</div>
 
   <label
   for="customerMainPhotoInput"
