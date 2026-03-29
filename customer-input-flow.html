@@ -261,15 +261,37 @@
 </div>
 
 <div class="customer-input-block">
-  <button class="customer-input-action" id="addDetailPhotosBtn" data-i18n="addDetailPhotosBtn">Detailfoto’s toevoegen</button>
+  <div class="customer-input-photo-actions">
+    <button
+      type="button"
+      class="customer-input-action"
+      id="openDetailPhotosCameraBtn"
+    >Camera</button>
+
+    <button
+      type="button"
+      class="customer-input-action"
+      id="openDetailPhotosUploadBtn"
+      data-i18n="addDetailPhotosBtn"
+    >Detailfoto’s toevoegen</button>
+  </div>
 
   <input
-  id="customerDetailPhotosInput"
-  type="file"
-  accept="image/*"
-  multiple
-  hidden
->
+    id="customerDetailPhotosCameraInput"
+    type="file"
+    accept="image/*"
+    capture="environment"
+    multiple
+    hidden
+  >
+
+  <input
+    id="customerDetailPhotosUploadInput"
+    type="file"
+    accept="image/*"
+    multiple
+    hidden
+  >
 </div>
   </div>
 </div>

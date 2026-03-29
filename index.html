@@ -1102,16 +1102,17 @@ showStep(0);
       window.applyShiftFlowTranslations(activeLang);
     }
 
-  const mainPhotoCameraInput = customerInputHost.querySelector('#customerMainPhotoCameraInput');
+const mainPhotoCameraInput = customerInputHost.querySelector('#customerMainPhotoCameraInput');
 const mainPhotoUploadInput = customerInputHost.querySelector('#customerMainPhotoUploadInput');
 const openMainPhotoCameraBtn = customerInputHost.querySelector('#openMainPhotoCameraBtn');
 const openMainPhotoUploadBtn = customerInputHost.querySelector('#openMainPhotoUploadBtn');
 const mainPhotoPreviewImg = customerInputHost.querySelector('#customerMainPhotoPreviewImg');
 const mainPhotoPlaceholderText = customerInputHost.querySelector('#customerMainPhotoPlaceholderText');
 const customerMainPhotoPlaceholderWrap = customerInputHost.querySelector('#customerMainPhotoPlaceholderWrap');
-const addDetailPhotosBtn = customerInputHost.querySelector('#addDetailPhotosBtn');
-const customerDetailPhotosInput = customerInputHost.querySelector('#customerDetailPhotosInput');
-
+const openDetailPhotosCameraBtn = customerInputHost.querySelector('#openDetailPhotosCameraBtn');
+const openDetailPhotosUploadBtn = customerInputHost.querySelector('#openDetailPhotosUploadBtn');
+const customerDetailPhotosCameraInput = customerInputHost.querySelector('#customerDetailPhotosCameraInput');
+const customerDetailPhotosUploadInput = customerInputHost.querySelector('#customerDetailPhotosUploadInput');
 if (mainPhotoPreviewImg && mainPhotoPlaceholderText && customerMainPhotoPlaceholderWrap) {
   const handleMainPhotoFile = (file) => {
     if (!file) return;
@@ -1167,9 +1168,15 @@ if (mainPhotoPreviewImg && mainPhotoPlaceholderText && customerMainPhotoPlacehol
     customerMainPhotoPlaceholderWrap.style.display = '';
   });
 }
-if (addDetailPhotosBtn && customerDetailPhotosInput) {
-  addDetailPhotosBtn.addEventListener('click', () => {
-    customerDetailPhotosInput.click();
+if (openDetailPhotosCameraBtn && customerDetailPhotosCameraInput) {
+  openDetailPhotosCameraBtn.addEventListener('click', () => {
+    customerDetailPhotosCameraInput.click();
+  });
+}
+
+if (openDetailPhotosUploadBtn && customerDetailPhotosUploadInput) {
+  openDetailPhotosUploadBtn.addEventListener('click', () => {
+    customerDetailPhotosUploadInput.click();
   });
 }
 
