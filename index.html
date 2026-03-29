@@ -142,12 +142,32 @@
   text-align: center;
   box-shadow: 0 0 18px rgba(255, 90, 90, 0.10);
 }
-.add-customer-card{
-  margin-top: 12px;
+.customer-list-home-card{
+  margin-top: 36px;
+  position: relative;
 }
 
-.customer-list-home-card{
-  margin-top: 12px;
+.customer-list-home-card::before{
+  content: '';
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: rgba(79, 214, 194, 0.18);
+  margin-bottom: 36px;
+}
+
+.add-customer-card{
+  margin-top: 36px;
+  position: relative;
+}
+
+.add-customer-card::before{
+  content: '';
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: rgba(79, 214, 194, 0.18);
+  margin-bottom: 36px;
 }
 
 .secondary-home-btn{
@@ -335,6 +355,15 @@
 }
 
 #customerOverlayHost[hidden]{
+  display: none;
+}
+#onboardingHost{
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+}
+
+#onboardingHost[hidden]{
   display: none;
 }
 
@@ -553,6 +582,7 @@
 <div id="customerInputHost" hidden></div>
 <div id="customerListHost" hidden></div>
 <div id="customerOverlayHost" hidden></div>
+<div id="onboardingHost" hidden></div>
 
 <div id="confirmModalHost" hidden>
   <div class="confirm-modal-backdrop">
@@ -607,6 +637,7 @@ const openCustomerInputBtn = document.getElementById('openCustomerInputBtn');
 const customerInputHost = document.getElementById('customerInputHost');
 const customerListHost = document.getElementById('customerListHost');
 const customerOverlayHost = document.getElementById('customerOverlayHost');
+const onboardingHost = document.getElementById('onboardingHost');
 const customerSearchInput = document.getElementById('customerSearchInput');
 const clearCustomerSearchBtn = document.getElementById('clearCustomerSearchBtn');
 const liveSearchLayer = document.getElementById('liveSearchLayer');
@@ -945,7 +976,118 @@ if (languageSelect) {
     }
   }
 
+
   loadSettingsPanel();
+
+async function loadOnboardingFlow() {
+  if (!onboardingHost) return;
+
+  try {
+    const response = await fetch('onboarding-flow.html');
+    const html = await response.text();
+    onboardingHost.innerHTML = html;
+    onboardingHost.hidden = false;
+
+ const onboardingLanguageButtons = onboardingHost.querySelectorAll('.onboarding-language-btn');
+const onboardingSteps = Array.from(onboardingHost.querySelectorAll('.onboarding-step'));
+const onboardingNextBtn = onboardingHost.querySelector('#onboardingNextBtn');
+const onboardingBackBtn = onboardingHost.querySelector('#onboardingBackBtn');
+let currentOnboardingLang = document.documentElement.dataset.lang || 'nl';
+
+function applyOnboardingTranslations(lang) {
+  const dict =
+    window.SHIFTFLOW_TRANSLATIONS?.[lang] ||
+    window.SHIFTFLOW_TRANSLATIONS?.nl ||
+    null;
+
+  if (!dict) return;
+
+  currentOnboardingLang = lang;
+
+  onboardingHost.querySelectorAll('[data-i18n]').forEach(element => {
+    const key = element.dataset.i18n;
+    if (!key || !dict[key]) return;
+    element.textContent = dict[key];
+  });
+
+  if (window.applyShiftFlowTranslations) {
+    window.applyShiftFlowTranslations(lang);
+  }
+
+  const languageSelect = settingsPanelHost?.querySelector('#languageSelect');
+  if (languageSelect) {
+    languageSelect.value = lang;
+  }
+}
+
+    function getActiveStepIndex() {
+      return onboardingSteps.findIndex(step => step.classList.contains('is-active'));
+    }
+
+    function showStep(nextIndex) {
+      onboardingSteps.forEach((step, index) => {
+        step.classList.toggle('is-active', index === nextIndex);
+      });
+
+      const isFirstStep = nextIndex === 0;
+      const isLastStep = nextIndex === onboardingSteps.length - 1;
+
+      if (onboardingBackBtn) {
+        onboardingBackBtn.style.display = isFirstStep ? 'none' : '';
+      }
+
+     if (onboardingNextBtn) {
+  onboardingNextBtn.textContent = isLastStep
+    ? (window.SHIFTFLOW_TRANSLATIONS?.[currentOnboardingLang]?.onboardingStartBtn || 'Start app')
+    : '→';
+} 
+    }
+
+    onboardingLanguageButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        onboardingLanguageButtons.forEach(item => {
+          item.classList.remove('is-selected');
+        });
+
+        button.classList.add('is-selected');
+
+        const selectedLang = button.dataset.langOption || 'nl';
+        applyOnboardingTranslations(selectedLang);
+      });
+    });
+
+    if (onboardingNextBtn) {
+      onboardingNextBtn.addEventListener('click', () => {
+        const activeIndex = getActiveStepIndex();
+        if (activeIndex < 0) return;
+
+        const nextIndex = activeIndex + 1;
+
+        if (nextIndex >= onboardingSteps.length) {
+          onboardingHost.hidden = true;
+          return;
+        }
+
+        showStep(nextIndex);
+      });
+    }
+
+    if (onboardingBackBtn) {
+      onboardingBackBtn.addEventListener('click', () => {
+        const activeIndex = getActiveStepIndex();
+        if (activeIndex <= 0) return;
+
+        showStep(activeIndex - 1);
+      });
+    }
+
+    applyOnboardingTranslations(currentOnboardingLang);
+showStep(0);
+  } catch (error) {
+    console.error('Failed to load onboarding flow:', error);
+  }
+}
+
 
   async function loadCustomerInputPanel() {
   if (!customerInputHost) return;
@@ -960,9 +1102,12 @@ if (languageSelect) {
       window.applyShiftFlowTranslations(activeLang);
     }
 
-    const mainPhotoInput = customerInputHost.querySelector('#customerMainPhotoInput');
-    const mainPhotoPreviewImg = customerInputHost.querySelector('#customerMainPhotoPreviewImg');
-    const mainPhotoPlaceholderText = customerInputHost.querySelector('#customerMainPhotoPlaceholderText');
+   const mainPhotoInput = customerInputHost.querySelector('#customerMainPhotoInput');
+   const mainPhotoPreviewImg = customerInputHost.querySelector('#customerMainPhotoPreviewImg');
+   const mainPhotoPlaceholderText = customerInputHost.querySelector('#customerMainPhotoPlaceholderText');
+   const addDetailPhotosBtn = customerInputHost.querySelector('#addDetailPhotosBtn');
+   const customerDetailPhotosInput = customerInputHost.querySelector('#customerDetailPhotosInput');
+
 
   if (mainPhotoInput && mainPhotoPreviewImg && mainPhotoPlaceholderText) {
   mainPhotoInput.addEventListener('change', () => {
@@ -985,6 +1130,11 @@ if (languageSelect) {
     mainPhotoPreviewImg.src = '';
     mainPhotoPreviewImg.style.display = 'none';
     mainPhotoPlaceholderText.style.display = '';
+  });
+}
+if (addDetailPhotosBtn && customerDetailPhotosInput) {
+  addDetailPhotosBtn.addEventListener('click', () => {
+    customerDetailPhotosInput.click();
   });
 }
 
@@ -1052,6 +1202,7 @@ const customerData = {
 }
 
 loadCustomerInputPanel();
+loadOnboardingFlow();
 
 async function loadCustomerOverlayPanel() {
   if (!customerOverlayHost) return;

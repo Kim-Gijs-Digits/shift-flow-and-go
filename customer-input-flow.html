@@ -134,9 +134,9 @@
   id="customerMainPhotoInput"
   type="file"
   accept="image/*"
+  capture="environment"
   hidden
 >
-
     <input
   id="customerNameInput"
   class="customer-input-field"
@@ -218,7 +218,16 @@
 </div>
 
 <div class="customer-input-block">
-  <button class="customer-input-action" data-i18n="addDetailPhotosBtn">Detailfoto’s toevoegen</button>
+  <button class="customer-input-action" id="addDetailPhotosBtn" data-i18n="addDetailPhotosBtn">Detailfoto’s toevoegen</button>
+
+  <input
+    id="customerDetailPhotosInput"
+    type="file"
+    accept="image/*"
+    capture="environment"
+    multiple
+    hidden
+  >
 </div>
   </div>
 </div>

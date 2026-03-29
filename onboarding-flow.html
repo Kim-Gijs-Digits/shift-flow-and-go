@@ -1,0 +1,383 @@
+<style>
+.onboarding-overlay{
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 10, 12, 0.72);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 4px;
+}
+
+.onboarding-card{
+  width: min(100%, 720px);
+  height: auto;
+  max-height: none;
+  overflow-y: auto;
+  border: 1px solid rgba(79, 214, 194, 0.22);
+  border-radius: 30px;
+  background: linear-gradient(180deg, rgba(20, 60, 64, 0.98), rgba(11, 34, 37, 0.98));
+  color: #f4fbfb;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.34), 0 0 24px rgba(79, 214, 194, 0.12);
+  padding: 26px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+    .onboarding-brand{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+
+  .onboarding-brand-wordmark{
+    height: 72px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .onboarding-step{
+    display: none !important;
+  }
+
+  .onboarding-step.is-active{
+    display: block !important;
+  }
+    .onboarding-step.is-first-step ~ .onboarding-actions #onboardingBackBtn{
+    display: none;
+  }
+
+  .onboarding-step.is-first-step ~ .onboarding-actions{
+    justify-content: flex-end;
+  }
+
+  .onboarding-title{
+  font-size: 30px;
+  line-height: 1.15;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.onboarding-text{
+  font-size: 15px;
+  line-height: 1.6;
+  color: #d7f2ed;
+  max-width: 92%;
+}
+
+.onboarding-visual{
+  min-height: 220px;
+  border: 1px solid rgba(79, 214, 194, 0.18);
+  border-radius: 22px;
+  background: rgba(79, 214, 194, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 22px;
+  color: #9fd6cc;
+  font-size: 17px;
+  margin-top: 20px;
+}
+
+.onboarding-step[data-step="work"] .onboarding-visual{
+  min-height: 310px;
+}
+  .onboarding-actions{
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 0;
+}
+  .onboarding-btn{
+    min-width: 136px;
+    min-height: 52px;
+    padding: 0 18px;
+    border-radius: 16px;
+    border: 1px solid rgba(79, 214, 194, 0.22);
+    background: rgba(79, 214, 194, 0.08);
+    color: #eafffb;
+    font-size: 17px;
+    font-weight: 700;
+  }
+  .onboarding-btn-primary{
+    background: rgba(79, 214, 194, 0.16);
+  }
+
+   .onboarding-language-list{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+.onboarding-language-btn{
+  min-height: 64px;
+  padding: 0 14px;
+  border: 1px solid rgba(79, 214, 194, 0.22);
+  border-radius: 16px;
+  background: rgba(79, 214, 194, 0.08);
+  color: #eafffb;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+  .onboarding-language-btn.is-selected{
+    border-color: rgba(79, 214, 194, 0.48);
+    background: rgba(79, 214, 194, 0.18);
+    box-shadow: 0 0 18px rgba(79, 214, 194, 0.14);
+  }
+  .onboarding-visual-app-preview{
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 12px;
+  text-align: left;
+  padding: 14px;
+}
+
+.onboarding-preview-search{
+  min-height: 42px;
+  border: 1px solid rgba(79, 214, 194, 0.18);
+  border-radius: 14px;
+  background: rgba(79, 214, 194, 0.08);
+  color: #9fd6cc;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.onboarding-preview-list{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.onboarding-preview-item{
+  padding: 12px 14px;
+  border: 1px solid rgba(79, 214, 194, 0.14);
+  border-radius: 14px;
+  background: rgba(79, 214, 194, 0.05);
+}
+
+.onboarding-preview-name{
+  font-size: 14px;
+  line-height: 1.25;
+  font-weight: 700;
+  color: #f4fbfb;
+}
+
+.onboarding-preview-meta{
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #9fd6cc;
+}
+.onboarding-visual-customer-overlay-preview{
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  text-align: left;
+  padding: 14px;
+}
+
+.onboarding-preview-overlay-card{
+  border: 1px solid rgba(79, 214, 194, 0.16);
+  border-radius: 18px;
+  background: rgba(79, 214, 194, 0.06);
+  padding: 14px;
+}
+
+.onboarding-preview-overlay-top{
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.onboarding-preview-overlay-chip{
+  min-height: 28px;
+  padding: 0 10px;
+  border: 1px solid rgba(79, 214, 194, 0.18);
+  border-radius: 999px;
+  background: rgba(79, 214, 194, 0.08);
+  color: #d7f2ed;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.onboarding-preview-overlay-photo{
+  height: 82px;
+  border: 1px dashed rgba(79, 214, 194, 0.22);
+  border-radius: 16px;
+  background: rgba(79, 214, 194, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9fd6cc;
+  font-size: 26px;
+  margin-bottom: 12px;
+}
+
+.onboarding-preview-overlay-name{
+  font-size: 16px;
+  line-height: 1.25;
+  font-weight: 700;
+  color: #f4fbfb;
+  margin-bottom: 12px;
+}
+
+.onboarding-preview-overlay-block{
+  padding: 10px 12px;
+  border: 1px solid rgba(79, 214, 194, 0.14);
+  border-radius: 14px;
+  background: rgba(79, 214, 194, 0.05);
+  margin-top: 8px;
+}
+
+.onboarding-preview-overlay-label{
+  font-size: 11px;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #9fd6cc;
+  margin-bottom: 4px;
+}
+
+.onboarding-preview-overlay-value{
+  font-size: 13px;
+  line-height: 1.45;
+  color: #f4fbfb;
+}
+</style>
+
+<div class="onboarding-overlay">
+  <div class="onboarding-card">
+    <div class="onboarding-brand">
+      <img src="logo-wordmark.png" alt="Shift Flow & Go" class="onboarding-brand-wordmark">
+    </div>
+
+     <section class="onboarding-step is-active is-first-step" data-step="language">
+      <div class="onboarding-language-list">
+        <button type="button" class="onboarding-language-btn is-selected" data-lang-option="nl">Nederlands</button>
+        <button type="button" class="onboarding-language-btn" data-lang-option="en">English</button>
+        <button type="button" class="onboarding-language-btn" data-lang-option="fr">Français</button>
+        <button type="button" class="onboarding-language-btn" data-lang-option="de">Deutsch</button>
+        <button type="button" class="onboarding-language-btn" data-lang-option="es">Español</button>
+        <button type="button" class="onboarding-language-btn" data-lang-option="it">Italiano</button>
+        <button type="button" class="onboarding-language-btn" data-lang-option="pl">Polski</button>
+        <button type="button" class="onboarding-language-btn" data-lang-option="hu">Magyar</button>
+      </div>
+    </section>
+
+  <section class="onboarding-step" data-step="welcome">
+  <div class="onboarding-title" data-i18n="onboardingWelcomeTitle">Welkom</div>
+
+  <div class="onboarding-text" data-i18n="onboardingWelcomeText">
+    Shift Flow &amp; Go helpt chauffeurs om onderweg snel klantinfo terug te vinden.
+  </div>
+
+<div class="onboarding-visual onboarding-visual-app-preview">
+  <div class="onboarding-preview-search" data-i18n="searchPlaceholder">Zoek klant of adres</div>
+
+  <div class="onboarding-preview-list">
+    <div class="onboarding-preview-item">
+      <div class="onboarding-preview-name">Nordex Logistix</div>
+      <div class="onboarding-preview-meta">2040 • A-4829</div>
+    </div>
+
+    <div class="onboarding-preview-item">
+      <div class="onboarding-preview-name">BlueHarbor Supply</div>
+      <div class="onboarding-preview-meta">2070 • B-214</div>
+    </div>
+
+    <div class="onboarding-preview-item">
+      <div class="onboarding-preview-name">TerraDock Services</div>
+      <div class="onboarding-preview-meta">2200 • C-305</div>
+    </div>
+  </div>
+</div>
+</section>
+
+    <section class="onboarding-step" data-step="work">
+      <div class="onboarding-title" data-i18n="onboardingWorkTitle">Hoe je werkt</div>
+      <div class="onboarding-text" data-i18n="onboardingWorkText">
+        Vind klanten snel terug, open klanten via Klanten A–Z, voeg nieuwe klanten toe en pas klantinfo meteen aan als onderweg iets veranderd is.
+      </div>
+<div class="onboarding-visual onboarding-visual-customer-overlay-preview">
+  <div class="onboarding-preview-overlay-card">
+    <div class="onboarding-preview-overlay-top">
+      <div class="onboarding-preview-overlay-chip">●</div>
+    </div>
+
+    <div class="onboarding-preview-overlay-photo">
+      <div class="onboarding-preview-overlay-fakephoto">
+        <div class="onboarding-preview-overlay-fakephoto-sky"></div>
+        <div class="onboarding-preview-overlay-fakephoto-building"></div>
+        <div class="onboarding-preview-overlay-fakephoto-door"></div>
+        <div class="onboarding-preview-overlay-fakephoto-sign">Nordex Logistix</div>
+      </div>
+    </div>
+
+    <div class="onboarding-preview-overlay-name">Nordex Logistix</div>
+
+    <div class="onboarding-preview-overlay-block">
+      <div class="onboarding-preview-overlay-label" data-i18n="customerOverlayAddressTitle">Adres</div>
+      <div class="onboarding-preview-overlay-value">Westpoort 12, 2040 Havenstad</div>
+    </div>
+
+    <div class="onboarding-preview-overlay-block">
+      <div class="onboarding-preview-overlay-label" data-i18n="customerOverlayGateCodePlaceholder">Poortcode</div>
+      <div class="onboarding-preview-overlay-value">A-4829</div>
+    </div>
+
+    <div class="onboarding-preview-overlay-block">
+      <div class="onboarding-preview-overlay-label" data-i18n="customerOverlayContactPlaceholder">Contactpersoon</div>
+      <div class="onboarding-preview-overlay-value">Milan Vermeer</div>
+    </div>
+
+    <div class="onboarding-preview-overlay-block">
+      <div class="onboarding-preview-overlay-label" data-i18n="customerOverlayPhonePlaceholder">Telefoonnummer</div>
+      <div class="onboarding-preview-overlay-value">+32 470 12 34 56</div>
+    </div>
+
+    <div class="onboarding-preview-overlay-block">
+      <div class="onboarding-preview-overlay-label" data-i18n="customerOverlayWebsitePlaceholder">Website</div>
+      <div class="onboarding-preview-overlay-value">www.nordex-logistix.example</div>
+    </div>
+
+    <div class="onboarding-preview-overlay-block">
+      <div class="onboarding-preview-overlay-label" data-i18n="customerOverlayOpeningHoursPlaceholder">Openingsuren</div>
+      <div class="onboarding-preview-overlay-value">07:00+</div>
+    </div>
+
+    <div class="onboarding-preview-overlay-block">
+      <div class="onboarding-preview-overlay-label" data-i18n="customerOverlayDriverInstructionsPlaceholder">Leverinstructies</div>
+      <div class="onboarding-preview-overlay-value">Poort A • Dok 3</div>
+    </div>
+  </div>
+</div>
+    </section>
+
+    <section class="onboarding-step" data-step="done">
+      <div class="onboarding-title" data-i18n="onboardingDoneTitle">Klaar om te starten</div>
+      <div class="onboarding-text" data-i18n="onboardingDoneText">
+        Alles staat klaar. Vanaf hier kan je de app normaal gebruiken.
+      </div>
+    </section>
+
+    <div class="onboarding-actions">
+      <button type="button" class="onboarding-btn" id="onboardingBackBtn" data-i18n="onboardingBackBtn">Terug</button>
+     <button type="button" class="onboarding-btn onboarding-btn-primary" id="onboardingNextBtn">→</button>
+    </div>
+  </div>
+</div>
