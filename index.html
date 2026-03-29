@@ -1102,16 +1102,18 @@ showStep(0);
       window.applyShiftFlowTranslations(activeLang);
     }
 
-   const mainPhotoInput = customerInputHost.querySelector('#customerMainPhotoInput');
-   const mainPhotoPreviewImg = customerInputHost.querySelector('#customerMainPhotoPreviewImg');
-   const mainPhotoPlaceholderText = customerInputHost.querySelector('#customerMainPhotoPlaceholderText');
-   const addDetailPhotosBtn = customerInputHost.querySelector('#addDetailPhotosBtn');
-   const customerDetailPhotosInput = customerInputHost.querySelector('#customerDetailPhotosInput');
+  const mainPhotoCameraInput = customerInputHost.querySelector('#customerMainPhotoCameraInput');
+const mainPhotoUploadInput = customerInputHost.querySelector('#customerMainPhotoUploadInput');
+const openMainPhotoCameraBtn = customerInputHost.querySelector('#openMainPhotoCameraBtn');
+const openMainPhotoUploadBtn = customerInputHost.querySelector('#openMainPhotoUploadBtn');
+const mainPhotoPreviewImg = customerInputHost.querySelector('#customerMainPhotoPreviewImg');
+const mainPhotoPlaceholderText = customerInputHost.querySelector('#customerMainPhotoPlaceholderText');
+const customerMainPhotoPlaceholderWrap = customerInputHost.querySelector('#customerMainPhotoPlaceholderWrap');
+const addDetailPhotosBtn = customerInputHost.querySelector('#addDetailPhotosBtn');
+const customerDetailPhotosInput = customerInputHost.querySelector('#customerDetailPhotosInput');
 
-
-  if (mainPhotoInput && mainPhotoPreviewImg && mainPhotoPlaceholderText) {
-  mainPhotoInput.addEventListener('change', () => {
-    const file = mainPhotoInput.files && mainPhotoInput.files[0];
+if (mainPhotoPreviewImg && mainPhotoPlaceholderText && customerMainPhotoPlaceholderWrap) {
+  const handleMainPhotoFile = (file) => {
     if (!file) return;
 
     const reader = new FileReader();
@@ -1119,17 +1121,50 @@ showStep(0);
     reader.onload = () => {
       mainPhotoPreviewImg.src = reader.result;
       mainPhotoPreviewImg.style.display = 'block';
-      mainPhotoPlaceholderText.style.display = 'none';
+      customerMainPhotoPlaceholderWrap.style.display = 'none';
     };
 
     reader.readAsDataURL(file);
-  });
+  };
+
+  if (mainPhotoCameraInput) {
+    mainPhotoCameraInput.addEventListener('change', () => {
+      const file = mainPhotoCameraInput.files && mainPhotoCameraInput.files[0];
+      handleMainPhotoFile(file);
+    });
+  }
+
+  if (mainPhotoUploadInput) {
+    mainPhotoUploadInput.addEventListener('change', () => {
+      const file = mainPhotoUploadInput.files && mainPhotoUploadInput.files[0];
+      handleMainPhotoFile(file);
+    });
+  }
+
+  if (openMainPhotoCameraBtn && mainPhotoCameraInput) {
+    openMainPhotoCameraBtn.addEventListener('click', () => {
+      mainPhotoCameraInput.click();
+    });
+  }
+
+  if (openMainPhotoUploadBtn && mainPhotoUploadInput) {
+    openMainPhotoUploadBtn.addEventListener('click', () => {
+      mainPhotoUploadInput.click();
+    });
+  }
 
   mainPhotoPreviewImg.addEventListener('click', () => {
-    mainPhotoInput.value = '';
+    if (mainPhotoCameraInput) {
+      mainPhotoCameraInput.value = '';
+    }
+
+    if (mainPhotoUploadInput) {
+      mainPhotoUploadInput.value = '';
+    }
+
     mainPhotoPreviewImg.src = '';
     mainPhotoPreviewImg.style.display = 'none';
-    mainPhotoPlaceholderText.style.display = '';
+    customerMainPhotoPlaceholderWrap.style.display = '';
   });
 }
 if (addDetailPhotosBtn && customerDetailPhotosInput) {
@@ -1251,22 +1286,27 @@ if (openCustomerInputBtn) {
       field.value = '';
     });
 
-    const mainPhotoInput = customerInputHost.querySelector('#customerMainPhotoInput');
-    const mainPhotoPreviewImg = customerInputHost.querySelector('#customerMainPhotoPreviewImg');
-    const mainPhotoPlaceholderText = customerInputHost.querySelector('#customerMainPhotoPlaceholderText');
+const mainPhotoCameraInput = customerInputHost.querySelector('#customerMainPhotoCameraInput');
+const mainPhotoUploadInput = customerInputHost.querySelector('#customerMainPhotoUploadInput');
+const mainPhotoPreviewImg = customerInputHost.querySelector('#customerMainPhotoPreviewImg');
+const customerMainPhotoPlaceholderWrap = customerInputHost.querySelector('#customerMainPhotoPlaceholderWrap');
 
-    if (mainPhotoInput) {
-      mainPhotoInput.value = '';
-    }
+if (mainPhotoCameraInput) {
+  mainPhotoCameraInput.value = '';
+}
 
-    if (mainPhotoPreviewImg) {
-      mainPhotoPreviewImg.src = '';
-      mainPhotoPreviewImg.style.display = 'none';
-    }
+if (mainPhotoUploadInput) {
+  mainPhotoUploadInput.value = '';
+}
 
-    if (mainPhotoPlaceholderText) {
-      mainPhotoPlaceholderText.style.display = '';
-    }
+if (mainPhotoPreviewImg) {
+  mainPhotoPreviewImg.src = '';
+  mainPhotoPreviewImg.style.display = 'none';
+}
+
+if (customerMainPhotoPlaceholderWrap) {
+  customerMainPhotoPlaceholderWrap.style.display = '';
+}
 
     customerInputHost.hidden = false;
   });
@@ -1359,10 +1399,11 @@ if (customerOverlayHost) {
       const dropoffInput = customerInputHost.querySelector('#customerDropoffInput');
       const openingHoursInput = customerInputHost.querySelector('#customerOpeningHoursInput');
       const notesInput = customerInputHost.querySelector('#customerNotesInput');
-      const mainPhotoInput = customerInputHost.querySelector('#customerMainPhotoInput');
+      const mainPhotoCameraInput = customerInputHost.querySelector('#customerMainPhotoCameraInput');
+      const mainPhotoUploadInput = customerInputHost.querySelector('#customerMainPhotoUploadInput');
       const mainPhotoPreviewImg = customerInputHost.querySelector('#customerMainPhotoPreviewImg');
-      const mainPhotoPlaceholderText = customerInputHost.querySelector('#customerMainPhotoPlaceholderText');
-
+      const customerMainPhotoPlaceholderWrap = customerInputHost.querySelector('#customerMainPhotoPlaceholderWrap');
+     
       if (nameInput) nameInput.value = customer.name || '';
       if (addressInput) addressInput.value = customer.address || '';
       if (gateCodeInput) gateCodeInput.value = customer.gateCode || '';
@@ -1374,18 +1415,22 @@ if (customerOverlayHost) {
       if (openingHoursInput) openingHoursInput.value = customer.openingHours || '';
       if (notesInput) notesInput.value = customer.notes || '';
 
-      if (mainPhotoInput) {
-        mainPhotoInput.value = '';
-      }
+   if (mainPhotoCameraInput) {
+  mainPhotoCameraInput.value = '';
+}
 
-      if (mainPhotoPreviewImg) {
-        mainPhotoPreviewImg.src = customer.mainPhotoUrl || '';
-        mainPhotoPreviewImg.style.display = customer.mainPhotoUrl ? 'block' : 'none';
-      }
+if (mainPhotoUploadInput) {
+  mainPhotoUploadInput.value = '';
+}
 
-      if (mainPhotoPlaceholderText) {
-        mainPhotoPlaceholderText.style.display = customer.mainPhotoUrl ? 'none' : '';
-      }
+if (mainPhotoPreviewImg) {
+  mainPhotoPreviewImg.src = customer.mainPhotoUrl || '';
+  mainPhotoPreviewImg.style.display = customer.mainPhotoUrl ? 'block' : 'none';
+}
+
+if (customerMainPhotoPlaceholderWrap) {
+  customerMainPhotoPlaceholderWrap.style.display = customer.mainPhotoUrl ? 'none' : '';
+}
 
       customerOverlayHost.hidden = true;
       customerInputHost.hidden = false;
