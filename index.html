@@ -699,9 +699,17 @@ async function uploadCustomerMainPhoto(file, customerId) {
 
   const storageRef = SHIFT_FLOW_STORAGE.ref().child(storagePath);
 
-  await storageRef.put(file, {
+  const uploadPromise = storageRef.put(file, {
     contentType: file.type || 'image/jpeg'
   });
+
+  const timeoutPromise = new Promise((_, reject) => {
+    window.setTimeout(() => {
+      reject(new Error('Main photo upload timeout after 20000ms.'));
+    }, 20000);
+  });
+
+  await Promise.race([uploadPromise, timeoutPromise]);
 
   const downloadUrl = await storageRef.getDownloadURL();
   return downloadUrl;
@@ -1236,20 +1244,8 @@ if (saveBtn) {
     saveBtn.textContent = busyLabel;
     saveBtn.disabled = true;
 
-  const mainPhotoCameraInput = customerInputHost.querySelector('#customerMainPhotoCameraInput');
-const mainPhotoUploadInput = customerInputHost.querySelector('#customerMainPhotoUploadInput');
-
-const selectedMainPhotoFile =
-  mainPhotoCameraInput?.files?.[0] ||
-  mainPhotoUploadInput?.files?.[0] ||
-  null;
-
-const customerIdForSave =
-  activeCustomerRecord?.id ||
-  `cust_${Date.now()}`;
-
-const customerData = {
-  id: customerIdForSave,
+  const customerData = {
+  id: activeCustomerRecord?.id || '',
   createdAt: activeCustomerRecord?.createdAt || '',
   createdBy: activeCustomerRecord?.createdBy || '',
   isActive: activeCustomerRecord?.isActive !== false,
@@ -1270,17 +1266,10 @@ const customerData = {
   dropoffInfo: customerInputHost.querySelector('#customerDropoffInput')?.value?.trim() || '',
   openingHours: customerInputHost.querySelector('#customerOpeningHoursInput')?.value?.trim() || '',
   notes: customerInputHost.querySelector('#customerNotesInput')?.value?.trim() || '',
-  mainPhotoUrl: activeCustomerRecord?.mainPhotoUrl || ''
+  mainPhotoUrl: customerInputHost.querySelector('#customerMainPhotoPreviewImg')?.getAttribute('src') || ''
 };
 
 try {
-  if (selectedMainPhotoFile) {
-    customerData.mainPhotoUrl = await uploadCustomerMainPhoto(
-      selectedMainPhotoFile,
-      customerIdForSave
-    );
-  }
-
   const savedCustomer = await window.ShiftFlowCustomers.saveCustomer(customerData);
   console.log('SHIFT-FLOW saved customer draft:', savedCustomer);
   customerInputHost.hidden = true;
