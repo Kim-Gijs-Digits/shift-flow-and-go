@@ -1158,19 +1158,41 @@ const openDetailPhotosUploadBtn = customerInputHost.querySelector('#openDetailPh
 const customerDetailPhotosCameraInput = customerInputHost.querySelector('#customerDetailPhotosCameraInput');
 const customerDetailPhotosUploadInput = customerInputHost.querySelector('#customerDetailPhotosUploadInput');
 if (mainPhotoPreviewImg && mainPhotoPlaceholderText && customerMainPhotoPlaceholderWrap) {
-  const handleMainPhotoFile = (file) => {
-    if (!file) return;
+const handleMainPhotoFile = (file) => {
+  if (!file) return;
 
-    const reader = new FileReader();
+  const reader = new FileReader();
 
-    reader.onload = () => {
-      mainPhotoPreviewImg.src = reader.result;
+  reader.onload = () => {
+    const img = new Image();
+
+    img.onload = () => {
+      const maxWidth = 1280;
+      const scale = Math.min(1, maxWidth / img.width);
+      const targetWidth = Math.round(img.width * scale);
+      const targetHeight = Math.round(img.height * scale);
+
+      const canvas = document.createElement('canvas');
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+
+      const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.72);
+
+      mainPhotoPreviewImg.src = compressedDataUrl;
       mainPhotoPreviewImg.style.display = 'block';
       customerMainPhotoPlaceholderWrap.style.display = 'none';
     };
 
-    reader.readAsDataURL(file);
+    img.src = reader.result;
   };
+
+  reader.readAsDataURL(file);
+};
 
   if (mainPhotoCameraInput) {
     mainPhotoCameraInput.addEventListener('change', () => {
