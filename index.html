@@ -1199,7 +1199,6 @@ if (saveBtn) {
 
     saveBtn.textContent = busyLabel;
     saveBtn.disabled = true;
-
 const customerData = {
   id: activeCustomerRecord?.id || '',
   createdAt: activeCustomerRecord?.createdAt || '',
@@ -1222,7 +1221,7 @@ const customerData = {
   dropoffInfo: customerInputHost.querySelector('#customerDropoffInput')?.value?.trim() || '',
   openingHours: customerInputHost.querySelector('#customerOpeningHoursInput')?.value?.trim() || '',
   notes: customerInputHost.querySelector('#customerNotesInput')?.value?.trim() || '',
-  mainPhotoUrl: customerInputHost.querySelector('#customerMainPhotoPreviewImg')?.getAttribute('src') || ''
+  mainPhotoUrl: activeCustomerRecord?.mainPhotoUrl || ''
 };
 
     try {
