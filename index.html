@@ -163,6 +163,31 @@
 
 .search-wrap .home-search{
   padding-left: 44px;
+  padding-right: 46px;
+}
+
+.search-clear-btn{
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(79, 214, 194, 0.12);
+  color: #eafffb;
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-shadow: 0 0 10px rgba(79, 214, 194, 0.10);
+}
+
+.search-clear-btn[hidden]{
+  display: none;
 }
 .live-search-layer{
   position: absolute;
@@ -376,18 +401,27 @@
 <section class="screen-card empty-home">
   <div class="search-wrap">
     <span class="search-icon">⌕</span>
-<input
-  type="text"
-  id="customerSearchInput"
-  class="home-search"
-  placeholder="Zoek klant, adres, gemeente, postcode of code"
-  data-i18n-placeholder="searchPlaceholder"
-  autocomplete="off"
->
-    
+    <input
+      type="text"
+      id="customerSearchInput"
+      class="home-search"
+      placeholder="Zoek klant, adres, gemeente, postcode of code"
+      data-i18n-placeholder="searchPlaceholder"
+      autocomplete="off"
+    >
+
+    <button
+      type="button"
+      id="clearCustomerSearchBtn"
+      class="search-clear-btn"
+      aria-label="Zoekveld leegmaken"
+      hidden
+    >✕</button>
+
     <div id="liveSearchLayer" class="live-search-layer" hidden></div>
   </div>
 </section>
+
 <section class="screen-card add-customer-card">
 <button id="openCustomerInputBtn" class="add-customer-btn" data-i18n="newCustomerBtn">+ Nieuwe klant</button>
 </section>
@@ -447,6 +481,7 @@ const openCustomerInputBtn = document.getElementById('openCustomerInputBtn');
 const customerInputHost = document.getElementById('customerInputHost');
 const customerOverlayHost = document.getElementById('customerOverlayHost');
 const customerSearchInput = document.getElementById('customerSearchInput');
+const clearCustomerSearchBtn = document.getElementById('clearCustomerSearchBtn');
 const liveSearchLayer = document.getElementById('liveSearchLayer');
 const confirmModalHost = document.getElementById('confirmModalHost');
 const confirmModalTitle = document.getElementById('confirmModalTitle');
@@ -1193,7 +1228,11 @@ if (confirmModalHost) {
     }
   });
 }
+function updateSearchClearButton() {
+  if (!clearCustomerSearchBtn || !customerSearchInput) return;
 
+  clearCustomerSearchBtn.hidden = !String(customerSearchInput.value || '').trim();
+}
 function renderLiveSearchResults(customers = []) {
   if (!liveSearchLayer) return;
 
@@ -1435,6 +1474,8 @@ if (customerSearchInput) {
   customerSearchInput.addEventListener('input', async (event) => {
     const query = event.target.value || '';
 
+    updateSearchClearButton();
+
     if (!query.trim()) {
       renderLiveSearchResults([]);
       return;
@@ -1444,8 +1485,21 @@ if (customerSearchInput) {
       const results = await window.ShiftFlowCustomers.searchCustomers(query);
       renderLiveSearchResults(results);
     } catch (error) {
-      console.error('SHIFT-FLOW live search failed:', error);
+      console.error('SHIFT-FLOW search failed:', error);
+      renderLiveSearchResults([]);
     }
+  });
+}
+
+if (clearCustomerSearchBtn) {
+  clearCustomerSearchBtn.addEventListener('click', () => {
+    if (customerSearchInput) {
+      customerSearchInput.value = '';
+      customerSearchInput.blur();
+    }
+
+    renderLiveSearchResults([]);
+    updateSearchClearButton();
   });
 }
 </script>
