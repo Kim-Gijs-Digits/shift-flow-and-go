@@ -333,11 +333,50 @@ async function requestCustomerDelete(customerId = '') {
   };
 }
 
+async function listCustomersAlphabetically() {
+  requireCompanyId();
+
+  const normalizeName = (value = '') =>
+    String(value || '').trim().toLocaleLowerCase();
+
+  if (runtimeContext.storageMode === 'cloud') {
+    const customersRef = getCustomersCollectionRef();
+    const snapshot = await customersRef.get();
+
+    return snapshot.docs
+      .map(doc => ({ id: doc.id, ...doc.data() }))
+      .filter(customer => {
+        if (customer.isActive === false) return false;
+        if (customer.deleteRequest?.status === 'pending') return false;
+        return true;
+      })
+      .sort((a, b) => {
+        const nameCompare = normalizeName(a.name).localeCompare(normalizeName(b.name));
+        if (nameCompare !== 0) return nameCompare;
+        return String(a.id || '').localeCompare(String(b.id || ''));
+      });
+  }
+
+  return runtimeCustomers
+    .filter(customer => {
+      if (customer.companyId !== runtimeContext.companyId) return false;
+      if (customer.isActive === false) return false;
+      if (customer.deleteRequest?.status === 'pending') return false;
+      return true;
+    })
+    .sort((a, b) => {
+      const nameCompare = normalizeName(a.name).localeCompare(normalizeName(b.name));
+      if (nameCompare !== 0) return nameCompare;
+      return String(a.id || '').localeCompare(String(b.id || ''));
+    });
+}
+
 return {
   createEmptyCustomer,
   setRuntimeContext,
   getRuntimeContext,
   searchCustomers,
+  listCustomersAlphabetically,
   getCustomerById,
   saveCustomer,
   requestCustomerDelete

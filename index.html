@@ -145,6 +145,24 @@
 .add-customer-card{
   margin-top: 12px;
 }
+
+.customer-list-home-card{
+  margin-top: 12px;
+}
+
+.secondary-home-btn{
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid rgba(79, 214, 194, 0.22);
+  border-radius: 18px;
+  background: rgba(79, 214, 194, 0.08);
+  color: #eafffb;
+  padding: 0 18px;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 0 18px rgba(79, 214, 194, 0.10);
+}
 .search-wrap{
   position: relative;
   width: 100%;
@@ -319,6 +337,103 @@
 #customerOverlayHost[hidden]{
   display: none;
 }
+
+#customerListHost{
+  position: fixed;
+  inset: 0;
+  z-index: 72;
+}
+
+#customerListHost[hidden]{
+  display: none;
+}
+
+.customer-list-backdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 10, 12, 0.58);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 20px 14px;
+}
+
+.customer-list-card{
+  width: 100%;
+  max-width: 520px;
+  max-height: 80vh;
+  overflow-y: auto;
+  border: 1px solid rgba(79, 214, 194, 0.22);
+  border-radius: 24px 24px 20px 20px;
+  background: linear-gradient(180deg, rgba(24, 72, 76, 0.98), rgba(11, 34, 37, 0.98));
+  color: #f4fbfb;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.34), 0 0 24px rgba(79, 214, 194, 0.12);
+  padding: 16px;
+}
+
+.customer-list-top{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.customer-list-title{
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.customer-list-close{
+  min-width: 40px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid rgba(79, 214, 194, 0.22);
+  border-radius: 14px;
+  background: rgba(79, 214, 194, 0.08);
+  color: #eafffb;
+  font-size: 18px;
+}
+
+.customer-list-items{
+  display: flex;
+  flex-direction: column;
+}
+
+.customer-list-item{
+  width: 100%;
+  display: block;
+  text-align: left;
+  border: none;
+  border-bottom: 1px solid rgba(79, 214, 194, 0.12);
+  background: transparent;
+  color: #eafffb;
+  padding: 14px 0;
+}
+
+.customer-list-item:last-child{
+  border-bottom: none;
+}
+
+.customer-list-name{
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.customer-list-address{
+  font-size: 13px;
+  color: #9fd6cc;
+  margin-top: 4px;
+}
+
+.customer-list-empty{
+  font-size: 14px;
+  color: #9fd6cc;
+  line-height: 1.5;
+  padding: 6px 0 2px;
+}
 #confirmModalHost{
   position: fixed;
   inset: 0;
@@ -422,11 +537,21 @@
   </div>
 </section>
 
-<section class="screen-card add-customer-card">
-<button id="openCustomerInputBtn" class="add-customer-btn" data-i18n="newCustomerBtn">+ Nieuwe klant</button>
+<section class="screen-card customer-list-home-card">
+  <button
+    id="openCustomerListBtn"
+    class="secondary-home-btn"
+    data-i18n="customerListBtn"
+  >Klanten A–Z</button>
 </section>
+
+<section class="screen-card add-customer-card">
+  <button id="openCustomerInputBtn" class="add-customer-btn" data-i18n="newCustomerBtn">+ Nieuwe klant</button>
+</section>
+
 <div id="settingsPanelHost" hidden></div>
 <div id="customerInputHost" hidden></div>
+<div id="customerListHost" hidden></div>
 <div id="customerOverlayHost" hidden></div>
 
 <div id="confirmModalHost" hidden>
@@ -477,8 +602,10 @@ const SHIFT_FLOW_APP_CONFIG = {
 
 const openSettingsBtn = document.getElementById('openSettingsBtn');
 const settingsPanelHost = document.getElementById('settingsPanelHost');
+const openCustomerListBtn = document.getElementById('openCustomerListBtn');
 const openCustomerInputBtn = document.getElementById('openCustomerInputBtn');
 const customerInputHost = document.getElementById('customerInputHost');
+const customerListHost = document.getElementById('customerListHost');
 const customerOverlayHost = document.getElementById('customerOverlayHost');
 const customerSearchInput = document.getElementById('customerSearchInput');
 const clearCustomerSearchBtn = document.getElementById('clearCustomerSearchBtn');
@@ -951,6 +1078,17 @@ loadCustomerOverlayPanel();
     settingsPanelHost.hidden = false;
   });
 }
+if (openCustomerListBtn) {
+  openCustomerListBtn.addEventListener('click', async () => {
+    try {
+      const customers = await window.ShiftFlowCustomers.listCustomersAlphabetically();
+      renderCustomerAlphabetList(customers);
+    } catch (error) {
+      console.error('SHIFT-FLOW customer A-Z list failed:', error);
+      renderCustomerAlphabetList([]);
+    }
+  });
+}
 if (openCustomerInputBtn) {
   openCustomerInputBtn.addEventListener('click', () => {
     if (!customerInputHost) return;
@@ -1232,6 +1370,206 @@ function updateSearchClearButton() {
   if (!clearCustomerSearchBtn || !customerSearchInput) return;
 
   clearCustomerSearchBtn.hidden = !String(customerSearchInput.value || '').trim();
+}
+function getShiftFlowDict() {
+  const activeLang = document.documentElement.dataset.lang || 'nl';
+
+  return (
+    window.SHIFTFLOW_TRANSLATIONS?.[activeLang] ||
+    window.SHIFTFLOW_TRANSLATIONS?.nl ||
+    {}
+  );
+}
+
+async function openCustomerOverlayById(customerId = '') {
+  const cleanId = String(customerId || '').trim();
+  if (!cleanId || !customerOverlayHost) return;
+
+  try {
+    const customer = await window.ShiftFlowCustomers.getCustomerById(cleanId);
+    if (!customer) return;
+
+    activeCustomerRecord = customer;
+
+    const overlayPhotoEl = customerOverlayHost.querySelector('.customer-overlay-photo');
+    const nameEl = customerOverlayHost.querySelector('[data-customer-field="name"]');
+    const addressEl = customerOverlayHost.querySelector('[data-customer-field="address"]');
+    const gateCodeEl = customerOverlayHost.querySelector('[data-customer-field="gateCode"]');
+    const contactEl = customerOverlayHost.querySelector('[data-customer-field="contact"]');
+    const phoneEl = customerOverlayHost.querySelector('[data-customer-field="phone"]');
+    const websiteEl = customerOverlayHost.querySelector('[data-customer-field="website"]');
+    const driverInstructionsEl = customerOverlayHost.querySelector('[data-customer-field="driverInstructions"]');
+    const dropoffInfoEl = customerOverlayHost.querySelector('[data-customer-field="dropoffInfo"]');
+    const openingHoursEl = customerOverlayHost.querySelector('[data-customer-field="openingHours"]');
+    const notesEl = customerOverlayHost.querySelector('[data-customer-field="notes"]');
+
+    if (overlayPhotoEl) {
+      if (customer.mainPhotoUrl) {
+        overlayPhotoEl.hidden = false;
+        overlayPhotoEl.style.display = 'flex';
+        overlayPhotoEl.innerHTML = `<img src="${customer.mainPhotoUrl}" alt="">`;
+      } else {
+        overlayPhotoEl.hidden = true;
+        overlayPhotoEl.style.display = 'none';
+        overlayPhotoEl.innerHTML = '';
+      }
+    }
+
+    if (nameEl) nameEl.textContent = customer.name || '';
+    if (addressEl) addressEl.textContent = customer.address || '';
+    if (gateCodeEl) gateCodeEl.textContent = customer.gateCode || '';
+
+    if (contactEl) {
+      contactEl.textContent = customer.contact || '';
+    }
+
+    if (phoneEl) {
+      if (customer.phone) {
+        phoneEl.textContent = customer.phone;
+      } else {
+        phoneEl.textContent = '';
+      }
+    }
+
+    if (websiteEl) {
+      if (customer.website) {
+        websiteEl.innerHTML = `
+          <a
+            href="${escapeHtml(customer.website)}"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="color:#7ee9d6;text-decoration:underline;word-break:break-word;"
+          >${escapeHtml(customer.website)}</a>
+        `;
+      } else {
+        websiteEl.textContent = '';
+      }
+    }
+
+    if (driverInstructionsEl) driverInstructionsEl.textContent = customer.driverInstructions || '';
+    if (dropoffInfoEl) dropoffInfoEl.textContent = customer.dropoffInfo || '';
+    if (openingHoursEl) openingHoursEl.textContent = customer.openingHours || '';
+    if (notesEl) notesEl.textContent = customer.notes || '';
+
+    const addressBlock = addressEl?.closest('.customer-overlay-block');
+    const contactBlock = contactEl?.closest('.customer-overlay-block');
+    const deliveryBlock = driverInstructionsEl?.closest('.customer-overlay-block');
+    const hoursBlock = openingHoursEl?.closest('.customer-overlay-block');
+    const photosBlock = customerOverlayHost
+      ?.querySelector('[data-i18n="customerOverlayPhotosTitle"]')
+      ?.closest('.customer-overlay-block');
+
+    function hasTextValue(value = '') {
+      return String(value || '').trim() !== '';
+    }
+
+    if (addressBlock) {
+      addressBlock.style.display =
+        (hasTextValue(customer.address) || hasTextValue(customer.gateCode))
+          ? ''
+          : 'none';
+    }
+
+    if (contactBlock) {
+      contactBlock.style.display =
+        (hasTextValue(customer.contact) || hasTextValue(customer.phone) || hasTextValue(customer.website))
+          ? ''
+          : 'none';
+    }
+
+    if (deliveryBlock) {
+      deliveryBlock.style.display =
+        (hasTextValue(customer.driverInstructions) || hasTextValue(customer.dropoffInfo))
+          ? ''
+          : 'none';
+    }
+
+    if (hoursBlock) {
+      hoursBlock.style.display =
+        (hasTextValue(customer.openingHours) || hasTextValue(customer.notes))
+          ? ''
+          : 'none';
+    }
+
+    if (photosBlock) {
+      photosBlock.style.display =
+        (Array.isArray(customer.detailPhotoUrls) && customer.detailPhotoUrls.length > 0)
+          ? ''
+          : 'none';
+    }
+
+    if (customerListHost) {
+      customerListHost.hidden = true;
+    }
+
+    liveSearchLayer.hidden = true;
+    customerOverlayHost.hidden = false;
+  } catch (error) {
+    console.error('SHIFT-FLOW get customer failed:', error);
+  }
+}
+
+function renderCustomerAlphabetList(customers = []) {
+  if (!customerListHost) return;
+
+  const dict = getShiftFlowDict();
+  const title = dict.customerListTitle || 'Klanten A–Z';
+  const emptyLabel = dict.customerListEmpty || 'Nog geen klanten gevonden.';
+  const unnamedLabel = dict.customerListUnnamed || '(zonder naam)';
+
+  if (!customers.length) {
+    customerListHost.innerHTML = `
+      <div class="customer-list-backdrop">
+        <div class="customer-list-card">
+          <div class="customer-list-top">
+            <div class="customer-list-title">${escapeHtml(title)}</div>
+            <button type="button" id="closeCustomerListBtn" class="customer-list-close">✕</button>
+          </div>
+          <div class="customer-list-empty">${escapeHtml(emptyLabel)}</div>
+        </div>
+      </div>
+    `;
+  } else {
+    customerListHost.innerHTML = `
+      <div class="customer-list-backdrop">
+        <div class="customer-list-card">
+          <div class="customer-list-top">
+            <div class="customer-list-title">${escapeHtml(title)}</div>
+            <button type="button" id="closeCustomerListBtn" class="customer-list-close">✕</button>
+          </div>
+          <div class="customer-list-items">
+            ${customers.map(customer => `
+              <button
+                type="button"
+                class="customer-list-item"
+                data-customer-id="${escapeHtml(customer.id)}"
+              >
+                <div class="customer-list-name">${escapeHtml(customer.name || unnamedLabel)}</div>
+                <div class="customer-list-address">${escapeHtml(customer.address || '')}</div>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  const closeBtn = customerListHost.querySelector('#closeCustomerListBtn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      customerListHost.hidden = true;
+    });
+  }
+
+  const itemButtons = customerListHost.querySelectorAll('.customer-list-item');
+  itemButtons.forEach(button => {
+    button.addEventListener('click', async () => {
+      const customerId = button.dataset.customerId || '';
+      await openCustomerOverlayById(customerId);
+    });
+  });
+
+  customerListHost.hidden = false;
 }
 function renderLiveSearchResults(customers = []) {
   if (!liveSearchLayer) return;

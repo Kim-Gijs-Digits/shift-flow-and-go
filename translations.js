@@ -2,6 +2,7 @@ window.SHIFTFLOW_TRANSLATIONS = {
   nl: {
     appTitle: "Shift Flow & Go",
     searchPlaceholder: "Zoek klant, adres, gemeente, postcode of code",
+    customerListBtn: "Klanten A–Z",
     newCustomerBtn: "+ Nieuwe klant",
     settingsTitle: "Instellingen",
     languageLabel: "Taal",
@@ -50,12 +51,16 @@ deleteCustomerConfirmTitle: "Klant verwijderen?",
 deleteCustomerConfirmBody: "Deze klant wordt nog niet definitief verwijderd. Er wordt een verwijderverzoek klaargezet voor admin-controle.",
 deleteCustomerPendingLabel: "Verwijderverzoek verstuurd",
 deleteCustomerConfirmAccept: "Bevestigen",
-deleteCustomerConfirmCancel: "Annuleren"
+deleteCustomerConfirmCancel: "Annuleren",
+customerListTitle: "Klanten A–Z",
+    customerListEmpty: "Nog geen klanten gevonden.",
+    customerListUnnamed: "(zonder naam)"
   },
 
   en: {
    appTitle: "Shift Flow & Go",
     searchPlaceholder: "Search customer, address, city, postal code or gate code",
+     customerListBtn: "Customers A–Z",
     newCustomerBtn: "+ New customer",
     settingsTitle: "Settings",
     languageLabel: "Language",
@@ -104,12 +109,16 @@ deleteCustomerConfirmTitle: "Delete customer?",
 deleteCustomerConfirmBody: "This customer will not be permanently deleted yet. A delete request will be prepared for admin review.",
 deleteCustomerPendingLabel: "Delete request sent",
 deleteCustomerConfirmAccept: "Confirm",
-deleteCustomerConfirmCancel: "Cancel"
+deleteCustomerConfirmCancel: "Cancel",
+customerListTitle: "Customers A–Z",
+    customerListEmpty: "No customers found yet.",
+    customerListUnnamed: "(unnamed)"
   },
 
   fr: {
    appTitle: "Shift Flow & Go",
     searchPlaceholder: "Rechercher client, adresse, ville, code postal ou code portail",
+    customerListBtn: "Clients A–Z",
     newCustomerBtn: "+ Nouveau client",
     settingsTitle: "Paramètres",
     languageLabel: "Langue",
@@ -158,12 +167,16 @@ deleteCustomerConfirmTitle: "Supprimer le client ?",
 deleteCustomerConfirmBody: "Ce client ne sera pas encore supprimé définitivement. Une demande de suppression sera préparée pour validation par l’administrateur.",
 deleteCustomerPendingLabel: "Demande de suppression envoyée",
 deleteCustomerConfirmAccept: "Confirmer",
-deleteCustomerConfirmCancel: "Annuler"
+deleteCustomerConfirmCancel: "Annuler",
+customerListTitle: "Clients A–Z",
+    customerListEmpty: "Aucun client trouvé pour le moment.",
+    customerListUnnamed: "(sans nom)"
   },
 
   de: {
    appTitle: "Shift Flow & Go",
     searchPlaceholder: "Kunde, Adresse, Ort, Postleitzahl oder Torcode suchen",
+    customerListBtn: "Kunden A–Z",
     newCustomerBtn: "+ Neuer Kunde",
     settingsTitle: "Einstellungen",
     languageLabel: "Sprache",
@@ -212,12 +225,16 @@ deleteCustomerConfirmTitle: "Kunde löschen?",
 deleteCustomerConfirmBody: "Dieser Kunde wird noch nicht endgültig gelöscht. Es wird zuerst eine Löschanfrage zur Admin-Prüfung vorbereitet.",
 deleteCustomerPendingLabel: "Löschanfrage gesendet",
 deleteCustomerConfirmAccept: "Bestätigen",
-deleteCustomerConfirmCancel: "Abbrechen"
+deleteCustomerConfirmCancel: "Abbrechen",
+customerListTitle: "Kunden A–Z",
+    customerListEmpty: "Noch keine Kunden gefunden.",
+    customerListUnnamed: "(ohne Namen)"
   },
 
   es: {
   appTitle: "Shift Flow & Go",
     searchPlaceholder: "Buscar cliente, dirección, ciudad, código postal o código de puerta",
+    customerListBtn: "Clientes A–Z",
     newCustomerBtn: "+ Nuevo cliente",
     settingsTitle: "Ajustes",
     languageLabel: "Idioma",
@@ -266,12 +283,16 @@ deleteCustomerConfirmTitle: "¿Eliminar cliente?",
 deleteCustomerConfirmBody: "Este cliente aún no se eliminará definitivamente. Se preparará una solicitud de eliminación para revisión del administrador.",
 deleteCustomerPendingLabel: "Solicitud de eliminación enviada",
 deleteCustomerConfirmAccept: "Confirmar",
-deleteCustomerConfirmCancel: "Cancelar"
+deleteCustomerConfirmCancel: "Cancelar",
+customerListTitle: "Clientes A–Z",
+    customerListEmpty: "Aún no se han encontrado clientes.",
+    customerListUnnamed: "(sin nombre)"
   },
 
   it: {
    appTitle: "Shift Flow & Go",
     searchPlaceholder: "Cerca cliente, indirizzo, città, CAP o codice cancello",
+    customerListBtn: "Clienti A–Z",
     newCustomerBtn: "+ Nuovo cliente",
     settingsTitle: "Impostazioni",
     languageLabel: "Lingua",
@@ -320,13 +341,17 @@ deleteCustomerConfirmTitle: "Eliminare cliente?",
 deleteCustomerConfirmBody: "Questo cliente non verrà ancora eliminato definitivamente. Verrà preparata una richiesta di eliminazione per il controllo dell’amministratore.",
 deleteCustomerPendingLabel: "Richiesta di eliminazione inviata",
 deleteCustomerConfirmAccept: "Conferma",
-deleteCustomerConfirmCancel: "Annulla"
+deleteCustomerConfirmCancel: "Annulla",
+customerListTitle: "Clienti A–Z",
+    customerListEmpty: "Nessun cliente trovato finora.",
+    customerListUnnamed: "(senza nome)"
     
   },
 
   pl: {
    appTitle: "Shift Flow & Go",
     searchPlaceholder: "Szukaj klienta, adresu, miasta, kodu pocztowego lub kodu bramy",
+    customerListBtn: "Klienci A–Z",
     newCustomerBtn: "+ Nowy klient",
     settingsTitle: "Ustawienia",
     languageLabel: "Język",
@@ -375,12 +400,16 @@ deleteCustomerConfirmTitle: "Usunąć klienta?",
 deleteCustomerConfirmBody: "Ten klient nie zostanie jeszcze trwale usunięty. Zostanie przygotowany wniosek o usunięcie do sprawdzenia przez administratora.",
 deleteCustomerPendingLabel: "Wysłano prośbę o usunięcie",
 deleteCustomerConfirmAccept: "Potwierdź",
-deleteCustomerConfirmCancel: "Anuluj"
+deleteCustomerConfirmCancel: "Anuluj",
+customerListTitle: "Klienci A–Z",
+    customerListEmpty: "Nie znaleziono jeszcze klientów.",
+    customerListUnnamed: "(bez nazwy)"
   },
 
   hu: {
     appTitle: "Shift Flow & Go",
     searchPlaceholder: "Ügyfél, cím, város, irányítószám vagy kapukód keresése",
+     customerListBtn: "Ügyfelek A–Z",
     newCustomerBtn: "+ Új ügyfél",
     settingsTitle: "Beállítások",
     languageLabel: "Nyelv",
@@ -429,6 +458,9 @@ deleteCustomerConfirmTitle: "Ügyfél törlése?",
 deleteCustomerConfirmBody: "Ez az ügyfél még nem lesz végleg törölve. Egy törlési kérés készül adminisztrátori ellenőrzésre.",
 deleteCustomerPendingLabel: "Törlési kérés elküldve",
 deleteCustomerConfirmAccept: "Megerősítés",
-deleteCustomerConfirmCancel: "Mégse"
+deleteCustomerConfirmCancel: "Mégse",
+customerListTitle: "Ügyfelek A–Z",
+    customerListEmpty: "Még nincs találat ügyfelekre.",
+    customerListUnnamed: "(név nélkül)"
   }
 };
