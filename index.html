@@ -613,8 +613,9 @@
 
 <button id="openSettingsBtn" class="settings-fab" aria-label="Instellingen">⚙</button>
   </main>
- <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 <script src="customers-core.js"></script>
 <script>
 
@@ -669,7 +670,42 @@ function getShiftFlowFirestore() {
 }
 
 const SHIFT_FLOW_DB = getShiftFlowFirestore();
+const SHIFT_FLOW_STORAGE = window.firebase?.apps?.length
+  ? window.firebase.storage()
+  : null;
+
 console.log('SHIFT FLOW & GO DB ready:', !!SHIFT_FLOW_DB);
+console.log('SHIFT FLOW & GO Storage ready:', !!SHIFT_FLOW_STORAGE);
+
+async function uploadCustomerMainPhoto(file, customerId) {
+  if (!file) return '';
+
+  if (!SHIFT_FLOW_STORAGE) {
+    throw new Error('Firebase Storage is niet beschikbaar.');
+  }
+
+  const cleanCustomerId = String(customerId || '').trim();
+  if (!cleanCustomerId) {
+    throw new Error('Missing customerId for main photo upload.');
+  }
+
+  const extension =
+    String(file.name || '').split('.').pop()?.toLowerCase() || 'jpg';
+
+  const safeExtension = extension.replace(/[^a-z0-9]/gi, '') || 'jpg';
+
+  const storagePath =
+    `companies/${SHIFT_FLOW_RUNTIME.companyId}/customers/${cleanCustomerId}/main/main-${Date.now()}.${safeExtension}`;
+
+  const storageRef = SHIFT_FLOW_STORAGE.ref().child(storagePath);
+
+  await storageRef.put(file, {
+    contentType: file.type || 'image/jpeg'
+  });
+
+  const downloadUrl = await storageRef.getDownloadURL();
+  return downloadUrl;
+}
 
 const SHIFT_FLOW_RUNTIME = {
   companyId: 'vanoirschot-demo',
@@ -1199,8 +1235,21 @@ if (saveBtn) {
 
     saveBtn.textContent = busyLabel;
     saveBtn.disabled = true;
+
+  const mainPhotoCameraInput = customerInputHost.querySelector('#customerMainPhotoCameraInput');
+const mainPhotoUploadInput = customerInputHost.querySelector('#customerMainPhotoUploadInput');
+
+const selectedMainPhotoFile =
+  mainPhotoCameraInput?.files?.[0] ||
+  mainPhotoUploadInput?.files?.[0] ||
+  null;
+
+const customerIdForSave =
+  activeCustomerRecord?.id ||
+  `cust_${Date.now()}`;
+
 const customerData = {
-  id: activeCustomerRecord?.id || '',
+  id: customerIdForSave,
   createdAt: activeCustomerRecord?.createdAt || '',
   createdBy: activeCustomerRecord?.createdBy || '',
   isActive: activeCustomerRecord?.isActive !== false,
@@ -1224,17 +1273,25 @@ const customerData = {
   mainPhotoUrl: activeCustomerRecord?.mainPhotoUrl || ''
 };
 
-    try {
-      const savedCustomer = await window.ShiftFlowCustomers.saveCustomer(customerData);
-      console.log('SHIFT-FLOW saved customer draft:', savedCustomer);
-      customerInputHost.hidden = true;
-    } catch (error) {
-      console.error('SHIFT-FLOW save failed:', error);
-    } finally {
-      saveBtn.dataset.isSaving = 'false';
-      saveBtn.textContent = idleLabel;
-      saveBtn.disabled = false;
-    }
+try {
+  if (selectedMainPhotoFile) {
+    customerData.mainPhotoUrl = await uploadCustomerMainPhoto(
+      selectedMainPhotoFile,
+      customerIdForSave
+    );
+  }
+
+  const savedCustomer = await window.ShiftFlowCustomers.saveCustomer(customerData);
+  console.log('SHIFT-FLOW saved customer draft:', savedCustomer);
+  customerInputHost.hidden = true;
+} catch (error) {
+  console.error('SHIFT-FLOW save failed:', error);
+} finally {
+  saveBtn.dataset.isSaving = 'false';
+  saveBtn.textContent = idleLabel;
+  saveBtn.disabled = false;
+}
+
       });
     }
   } catch (error) {
